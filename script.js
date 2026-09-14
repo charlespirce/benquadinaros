@@ -1,5 +1,5 @@
 // get html elements
-const clickCount = document.getElementById('clickCount'); //click count
+const clickCount = document.getElementById('click-count'); //click count
 const ben_img = document.getElementById("ben-img"); //image id
 
 // load storage
