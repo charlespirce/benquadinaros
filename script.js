@@ -3,7 +3,7 @@ const clickCount = document.getElementById('click-count'); //click count
 const ben_img = document.getElementById("ben-img"); //image id
 
 // load storage
-let clicks = localStorage.getItem("clicks") || 0;
+let clicks = localStorage.getItem("totalClicks") || 0;
 
 clickCount.textContent = clicks; //update html display
 
@@ -13,5 +13,5 @@ clickCount.textContent = clicks; //update html display
 ben_img.addEventListener("click", () => {
     clicks++; //increment click count
     clickCount.textContent = clicks; //update html display
-    localStorage.setItem("clicks", clicks); //save to local storage
+    localStorage.setItem("totalClicks", clicks); //save to local storage
 });
