@@ -10,6 +10,15 @@ what?
 
 <button type="button">Click Me!</button>
 
-<img src="ben.jpeg" alt="Ben" width="399" height="501">
+<img id="ben-img" src="ben.jpeg" alt="Ben" width="399" height="501">
+
+<script>
+    const ben_img = document.getElementById("ben-img");
+
+    ben_img.addEventListener("click", function() {
+        alert("You clicked on Ben!");
+        consol.log("Ben was clicked!");
+    });
+</script>
 
 </html>
