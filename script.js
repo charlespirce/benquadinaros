@@ -2,10 +2,12 @@
 const clickCount = document.getElementById('click-count'); //click count
 const ben_img = document.getElementById("ben-img"); //image id
 const click_noise = new Audio("mixkit-mouse-click-close-1113.wav"); //click noise
+const ratCount = document.getElementById("rats-owned"); //rat count
 
 // load storage
 let clicks = localStorage.getItem("totalClicks") || 0;
 let rat_cost = 20; //Initial cost of 1 ratts tyerell
+let rats = 0 //Number of Ratts Tyerells owned
 
 clickCount.textContent = clicks; //update html display
 
@@ -26,5 +28,8 @@ rat_button.addEventListener("click", () => {
         rat_cost = Math.floor(rat_cost * 1.2); //increase cost by 20%
         clickCount.textContent = clicks; //update html display
         localStorage.setItem("totalClicks", clicks); //save to local storage
+        rats++; //increment Ratts Tyerell count
+        ratCount.textContent = rats; //update html display
+        localStorage.setItem("ratsOwned", rats); //save to local storage
     }
 });
