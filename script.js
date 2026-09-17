@@ -3,14 +3,17 @@ const clickCount = document.getElementById('click-count'); //click count
 const ben_img = document.getElementById("ben-img"); //image id
 const click_noise = new Audio("mixkit-mouse-click-close-1113.wav"); //click noise
 const ratCount = document.getElementById("rats-owned"); //rat count
+const ratCost= document.getElementById("rat-cost"); //rat cost
 
 // load storage
 let clicks = localStorage.getItem("totalClicks") || 0;
-let rat_cost = 20; //Initial cost of 1 ratts tyerell
+let rat_cost = localStorage.getItem("rat-cost") || 20; //Initial cost of 1 ratts tyerell
 let rats = localStorage.getItem("rats-owned") || 0; //Number of Ratts Tyerells owned
 
 clickCount.textContent = clicks; //update html display
 ratCount.textContent = rats; //update html display
+ratCost.textContent = rat_cost; //update html display
+
 
 
 // event listeners
@@ -26,9 +29,11 @@ rat_button.addEventListener("click", () => {
     click_noise.play();
     if (clicks >= rat_cost) {
         clicks -= rat_cost; //deduct cost
-        rat_cost = Math.floor(rat_cost * 1.2); //increase cost by 20%
+        rat_cost = Math.floor(rat_cost * (1.2)); //increase cost by 20%
         clickCount.textContent = clicks; //update html display
         localStorage.setItem("totalClicks", clicks); //save to local storage
+        localStorage.setItem("rat-cost", rat_cost); //save new cost to local storage
+        ratCost.textContent = rat_cost; //update html display
         rats++; //increment Ratts Tyerell count
         ratCount.textContent = rats; //update html display
         localStorage.setItem("rats-owned", rats); //save to local storage
