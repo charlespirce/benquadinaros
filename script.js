@@ -1,7 +1,7 @@
 // get html elements
 const clickCount = document.getElementById('click-count'); //click count
 const ben_img = document.getElementById("ben-img"); //image id
-const click_noise = new Audio("mixkti-mouse-click-close-1113.wav"); //click noise
+const click_noise = new Audio("mixkit-mouse-click-close-1113.wav"); //click noise
 
 // load storage
 let clicks = localStorage.getItem("totalClicks") || 0;
