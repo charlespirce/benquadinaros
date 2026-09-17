@@ -7,5 +7,6 @@ function play_bgmusic(){
 }
 
 jacob_song.play();//play the audio
-const intervalId = setInterval(play_bgmusic, 51000); //call function every 51 seconds
+
+const backgroundmusicID = setInterval(play_bgmusic, 51000); //call function every 51 seconds
 
