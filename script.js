@@ -7,9 +7,10 @@ const ratCount = document.getElementById("rats-owned"); //rat count
 // load storage
 let clicks = localStorage.getItem("totalClicks") || 0;
 let rat_cost = 20; //Initial cost of 1 ratts tyerell
-let rats = 0 //Number of Ratts Tyerells owned
+let rats = localStorage.getItem("rats-owned") || 0; //Number of Ratts Tyerells owned
 
 clickCount.textContent = clicks; //update html display
+ratCount.textContent = rats; //update html display
 
 
 // event listeners
@@ -30,6 +31,6 @@ rat_button.addEventListener("click", () => {
         localStorage.setItem("totalClicks", clicks); //save to local storage
         rats++; //increment Ratts Tyerell count
         ratCount.textContent = rats; //update html display
-        localStorage.setItem("ratsOwned", rats); //save to local storage
+        localStorage.setItem("rats-owned", rats); //save to local storage
     }
 });
