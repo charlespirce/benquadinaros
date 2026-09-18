@@ -2,6 +2,7 @@
 const clickCount = document.getElementById('click-count'); //click count
 const ben_img = document.getElementById("ben-img"); //image id
 const click_noise = new Audio("mixkit-mouse-click-close-1113.wav"); //click noise
+const reset_button = document.getElementById('reset_clicks');
 //rat
 const ratCount = document.getElementById("rats-owned"); //rat count
 const ratCost = document.getElementById("rat-cost"); //rat cost
@@ -67,3 +68,7 @@ rat_button.addEventListener("click", () => {
     }
 });
 
+reset_button.addEventListener("click", () => {
+    clicks = 0;
+    update_imgBen();
+});
