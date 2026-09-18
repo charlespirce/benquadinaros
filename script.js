@@ -70,5 +70,6 @@ rat_button.addEventListener("click", () => {
 
 reset_button.addEventListener("click", () => {
     clicks = 0;
+    localStorage.setItem("totalClicks", 0);
     update_imgBen();
 });
