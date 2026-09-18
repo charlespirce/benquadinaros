@@ -22,7 +22,7 @@ let totalRate = ratRate //add other rates here
 
 //functions
 function addRate() {
-    clickCount = clickCount + totalRate
+    clickCount = clickCount + totalRate;
 }
 
 //udpate html & storage
