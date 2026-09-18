@@ -17,12 +17,13 @@ ratCount.textContent = rats; //update html display
 ratCost.textContent = rat_cost; //update html display
 
 //var
-var totalRate = ratRate //add other rates here
+var totalRate = ratRate * rats //add other rates here
 
 
 //functions
 function addRate() {
-    clickCount.textContent = clicks + totalRate;
+    clicks = clicks + totalRate
+    clickCount.textContent = clicks;
 }
 
 //udpate html & storage
