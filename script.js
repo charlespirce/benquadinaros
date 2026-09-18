@@ -23,7 +23,7 @@ let totalRate = ratRate * rats //add other rates here
 //functions
 
 function addRate() {
-    clicks = clicks + totalRate
+    clicks = +clicks + +totalRate
     clickCount.textContent = clicks;
 }
 
