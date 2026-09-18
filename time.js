@@ -1,4 +1,4 @@
-import { update_imgBen, addRate, totalRate } from "./script";
+
 
 // clock function
 
@@ -23,8 +23,7 @@ function updateClock() {
     document.getElementById('clock').textContent = timeString;
 
     //other functions I want to slip in here
-    addRate();
-    update_imgBen();
+
 
 }
 
