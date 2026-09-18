@@ -8,11 +8,15 @@ const disp_rate = document.getElementById("display-rate");
 const ratCount = document.getElementById("rats-owned"); //rat count
 const ratCost = document.getElementById("rat-cost"); //rat cost
 const ratRate = 1 //1 rat = 1 clicks/s
+//PolyBen
+const polyben_text = document.getElementById("polyben-text");
+
 
 // load storage
 let clicks = localStorage.getItem("totalClicks") || 0;
 let rat_cost = localStorage.getItem("rat-cost") || 20; //Initial cost of 1 ratts tyerell
 let rats = localStorage.getItem("rats-owned") || 0; //Number of Ratts Tyerells owned
+let polyben_unlocked= localStorage.getItem("polyben_unlocked") || false;
 
 clickCount.textContent = clicks; //update html display
 ratCount.textContent = rats; //update html display
@@ -34,7 +38,12 @@ function addRate() {
     clicks = +clicks + +totalRate
     clickCount.textContent = clicks;
 }
-
+function update_polyben_text(){
+    if (polyben_unlocked) {
+        polyben_text.textContent = "Switch to PolyBen";
+    }
+}
+update_polyben_text();
 //udpate html & storage
 function update_imgBen() {
     clickCount.textContent = clicks; //update html display
@@ -75,6 +84,28 @@ rat_button.addEventListener("click", () => {
         update_rate();
     }
     update_rate();
+});
+
+polyben_button.addEventListener("click", () => {
+    click_noise.play();
+    if (clicks >=1000 && !polyben_unlocked) {
+        clicks -= 1000;
+        update_imgBen();
+        polyben_unlocked = true;
+        localStorage.setItem("polyben_unlocked", true);
+        polyben_text.textContent = "Switch to PolyBen";
+    }
+    if (polyben_unlocked) {
+        if (ben_img.src.includes("ben.jpeg")){
+            ben_img.src="benquad.png";
+            polyben_text.textContent = "Switch to Ben";
+        }
+        else {
+            ben_img.src="ben.jpeg";
+            polyben_text.textContent = "Switch to PolyBen";
+        }
+    }
+
 });
 
 reset_button.addEventListener("click", () => {
