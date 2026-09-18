@@ -68,7 +68,7 @@ rat_button.addEventListener("click", () => {
         rats++; //increment Ratts Tyerell count
         ratCount.textContent = rats; //update html display
         localStorage.setItem("rats-owned", rats); //save to local storage
-
+        update_rate();
     }
 });
 
