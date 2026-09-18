@@ -96,12 +96,12 @@ polyben_button.addEventListener("click", () => {
         polyben_text.textContent = "Switch to PolyBen";
     }
     if (polyben_unlocked) {
-        if (ben_img.src.includes("ben.jpeg")){
+        if (ben_img.src.includes("ben.png")){
             ben_img.src="benquad.png";
             polyben_text.textContent = "Switch to Ben";
         }
         else {
-            ben_img.src="ben.jpeg";
+            ben_img.src="ben.png";
             polyben_text.textContent = "Switch to PolyBen";
         }
     }
