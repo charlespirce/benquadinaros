@@ -10,6 +10,7 @@ const ratCost = document.getElementById("rat-cost"); //rat cost
 const ratRate = 1 //1 rat = 1 clicks/s
 //PolyBen
 const polyben_text = document.getElementById("polyben-text");
+const polyben_button_img = document.getElementById("polyben_button_img");
 
 
 // load storage
@@ -98,10 +99,12 @@ polyben_button.addEventListener("click", () => {
     if (polyben_unlocked) {
         if (ben_img.src.includes("ben.png")){
             ben_img.src="benquad.png";
+            polyben_button_img.src="ben.png";
             polyben_text.textContent = "Switch to Ben";
         }
         else {
             ben_img.src="ben.png";
+            polyben_button_img.src="benquad.png";
             polyben_text.textContent = "Switch to PolyBen";
         }
     }
