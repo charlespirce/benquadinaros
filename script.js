@@ -31,7 +31,7 @@ function update_imgBen() {
     localStorage.setItem("totalClicks", clicks); //save to local storage
 }
 
-
+export {update_imgBen, addRate, totalRate};
 
 // event listeners
 

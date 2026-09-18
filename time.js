@@ -1,4 +1,5 @@
 // clock function
+import { update_imgBen, addRate, totalRate } from "./script";
 
 function updateClock() {
     // 1. Get the current date and time
