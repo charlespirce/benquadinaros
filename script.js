@@ -22,6 +22,9 @@ let totalRate = ratRate * rats //add other rates here
 
 
 //functions
+function update_rate(){
+    lotalRate = ratRate * rats;
+}
 
 function addRate() {
     clicks = +clicks + +totalRate
@@ -65,6 +68,7 @@ rat_button.addEventListener("click", () => {
         rats++; //increment Ratts Tyerell count
         ratCount.textContent = rats; //update html display
         localStorage.setItem("rats-owned", rats); //save to local storage
+
     }
 });
 
