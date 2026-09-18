@@ -8,7 +8,7 @@ const ratCost = document.getElementById("rat-cost"); //rat cost
 const ratRate = 1 //1 rat = 1 clicks/s
 
 // load storage
-var clicks = localStorage.getItem("totalClicks") || 0;
+let clicks = localStorage.getItem("totalClicks") || 0;
 let rat_cost = localStorage.getItem("rat-cost") || 20; //Initial cost of 1 ratts tyerell
 let rats = localStorage.getItem("rats-owned") || 0; //Number of Ratts Tyerells owned
 
@@ -17,10 +17,11 @@ ratCount.textContent = rats; //update html display
 ratCost.textContent = rat_cost; //update html display
 
 //var
-var totalRate = ratRate * rats //add other rates here
+let totalRate = ratRate * rats //add other rates here
 
 
 //functions
+
 function addRate() {
     clicks = clicks + totalRate
     clickCount.textContent = clicks;
@@ -32,6 +33,14 @@ function update_imgBen() {
     localStorage.setItem("totalClicks", clicks); //save to local storage
 }
 
+function secondLoop() {
+    addRate();
+    update_imgBen();
+}
+
+
+secondLoop();
+setInterval(secondLoop, 1000);
 
 
 // event listeners

@@ -22,9 +22,6 @@ function updateClock() {
     // 5. Inject the string into your HTML container
     document.getElementById('clock').textContent = timeString;
 
-    //other functions I want to slip in here
-    addRate();
-    update_imgBen();
 
 }
 
