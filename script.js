@@ -8,7 +8,7 @@ const ratCost = document.getElementById("rat-cost"); //rat cost
 const ratRate = 1 //1 rat = 1 clicks/s
 
 // load storage
-let clicks = localStorage.getItem("totalClicks") || 0;
+var clicks = localStorage.getItem("totalClicks") || 0;
 let rat_cost = localStorage.getItem("rat-cost") || 20; //Initial cost of 1 ratts tyerell
 let rats = localStorage.getItem("rats-owned") || 0; //Number of Ratts Tyerells owned
 
@@ -17,12 +17,12 @@ ratCount.textContent = rats; //update html display
 ratCost.textContent = rat_cost; //update html display
 
 //var
-let totalRate = ratRate //add other rates here
+var totalRate = ratRate //add other rates here
 
 
 //functions
 function addRate() {
-    clickCount = clickCount + totalRate;
+    clickCount.textContent = clicks + totalRate;
 }
 
 //udpate html & storage
