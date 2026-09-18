@@ -21,8 +21,7 @@ function updateClock() {
     document.getElementById('clock').textContent = timeString;
 
     //other functions I want to slip in here
-    addRate();
-    update_imgBen();
+    
 
 }
 
