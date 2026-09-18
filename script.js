@@ -3,7 +3,7 @@ const clickCount = document.getElementById('click-count'); //click count
 const ben_img = document.getElementById("ben-img"); //image id
 const click_noise = new Audio("mixkit-mouse-click-close-1113.wav"); //click noise
 const reset_button = document.getElementById('reset_clicks');
-const disp_rate = document.getElementById('display-rate');
+const disp_rate = document.getElementById("display-rate");
 //rat
 const ratCount = document.getElementById("rats-owned"); //rat count
 const ratCost = document.getElementById("rat-cost"); //rat cost
