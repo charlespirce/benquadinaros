@@ -21,15 +21,15 @@ let totalRate = ratRate //add other rates here
 
 
 //functions
-function addRate(){
+function addRate() {
     clickCount = clickCount + totalRate
-};
+}
 
 //udpate html & storage
-function update_imgBen(){
+function update_imgBen() {
     clickCount.textContent = clicks; //update html display
     localStorage.setItem("totalClicks", clicks); //save to local storage
-};
+}
 
 
 // event listeners
