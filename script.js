@@ -24,7 +24,7 @@ let totalRate = ratRate * rats //add other rates here
 
 //functions
 function update_rate(){
-    lotalRate = ratRate * rats;
+    totalRate = ratRate * rats;
     disp_rate.textContent = totalRate;
 }
 
