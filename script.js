@@ -74,6 +74,7 @@ rat_button.addEventListener("click", () => {
         localStorage.setItem("rats-owned", rats); //save to local storage
         update_rate();
     }
+    update_rate();
 });
 
 reset_button.addEventListener("click", () => {
