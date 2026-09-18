@@ -2,8 +2,10 @@
 const clickCount = document.getElementById('click-count'); //click count
 const ben_img = document.getElementById("ben-img"); //image id
 const click_noise = new Audio("mixkit-mouse-click-close-1113.wav"); //click noise
+//rat
 const ratCount = document.getElementById("rats-owned"); //rat count
-const ratCost= document.getElementById("rat-cost"); //rat cost
+const ratCost = document.getElementById("rat-cost"); //rat cost
+const ratRate = 1 //1 rat = 1 clicks/s
 
 // load storage
 let clicks = localStorage.getItem("totalClicks") || 0;
@@ -14,6 +16,20 @@ clickCount.textContent = clicks; //update html display
 ratCount.textContent = rats; //update html display
 ratCost.textContent = rat_cost; //update html display
 
+//var
+let totalRate = ratRate //add other rates here
+
+
+//functions
+function addRate(){
+    clickCount = clickCount + totalRate
+};
+
+//udpate html & storage
+function update_imgBen(){
+    clickCount.textContent = clicks; //update html display
+    localStorage.setItem("totalClicks", clicks); //save to local storage
+};
 
 
 // event listeners
@@ -21,9 +37,9 @@ ratCost.textContent = rat_cost; //update html display
 ben_img.addEventListener("click", () => {
     click_noise.play();
     clicks++; //increment click count
-    clickCount.textContent = clicks; //update html display
-    localStorage.setItem("totalClicks", clicks); //save to local storage
+    update_imgBen();
 });
+
 
 rat_button.addEventListener("click", () => {
     click_noise.play();
@@ -39,3 +55,4 @@ rat_button.addEventListener("click", () => {
         localStorage.setItem("rats-owned", rats); //save to local storage
     }
 });
+
