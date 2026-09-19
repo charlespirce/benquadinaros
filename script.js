@@ -11,6 +11,9 @@ const ratRate = 1 //1 rat = 1 clicks/s
 //PolyBen
 const polyben_text = document.getElementById("polyben-text");
 const polyben_button_img = document.getElementById("polyben_button_img");
+//BT-310 Quadra
+const bt310quadraCount = document.getElementById("bt310quadra-owned"); //BT-310 Quadra count
+const bt310quadraCost = document.getElementById("bt310quadra-cost"); //BT-310 Quadra cost
 
 
 // load storage
@@ -18,10 +21,14 @@ let clicks = localStorage.getItem("totalClicks") || 0;
 let rat_cost = localStorage.getItem("rat-cost") || 20; //Initial cost of 1 ratts tyerell
 let rats = localStorage.getItem("rats-owned") || 0; //Number of Ratts Tyerells owned
 let polyben_unlocked= localStorage.getItem("polyben_unlocked") || false;
+let bt310quadras = localStorage.getItem("bt310quadras-owned") || 0; //Number of BT-310 Quadras owned
+let bt310quadra_cost = localStorage.getItem("bt310quadra-cost") || 1500; //Initial cost of 1 BT-310 Quadra
 
 clickCount.textContent = clicks; //update html display
 ratCount.textContent = rats; //update html display
 ratCost.textContent = rat_cost; //update html display
+bt310quadraCount.textContent = bt310quadras; //update html display
+bt310quadraCost.textContent = bt310quadra_cost; //update html display
 
 //var
 let totalRate = ratRate * rats //add other rates here
@@ -29,14 +36,14 @@ let totalRate = ratRate * rats //add other rates here
 
 //functions
 function update_rate(){
-    totalRate = ratRate * rats;
+    totalRate = Math.floor((ratRate * rats)*(1 + 0.2 * bt310quadras));
     disp_rate.textContent = totalRate;
 }
 
 update_rate();
 
 function addRate() {
-    clicks = +clicks + +totalRate
+    clicks = Math.floor(+clicks + +totalRate);
     clickCount.textContent = clicks;
 }
 function update_polyben_text(){
@@ -109,6 +116,22 @@ polyben_button.addEventListener("click", () => {
         }
     }
 
+});
+
+bt310quadra_button.addEventListener("click", () => {
+    click_noise.play();
+    if (clicks >= bt310quadra_cost) {
+        clicks -= bt310quadra_cost; //deduct cost
+        bt310quadra_cost = Math.floor(bt310quadra_cost * (1.2));
+        clickCount.textContent = clicks; //update html display
+        localStorage.setItem("totalClicks", clicks);
+        localStorage.setItem("bt310quadra-cost", bt310quadra_cost);
+        bt310quadraCost.textContent = bt310quadra_cost; //update html display
+        bt310quadras++;
+        bt310quadraCount.textContent = bt310quadras; 
+        localStorage.setItem("bt310quadras-owned", bt310quadras);
+        update_rate();
+    }
 });
 
 reset_button.addEventListener("click", () => {
