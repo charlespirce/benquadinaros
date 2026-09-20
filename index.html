@@ -1,55 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Ben Quadinaros Clicker</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ben Quadinaros Clicker</title>
+    <link rel="stylesheet" href="src/styles.css">
+    <script src="src/main.js" defer></script>
 </head>
 
-<style>
-    h1 {text-align: center;}
-    body {text-align: center;}
-</style>
+<body>
+    <!-- static chrome -->
+    <img class="title" src="assets/ben_title.png" alt="Ben Quadinaros Clicker">
+    <img class="title" src="assets/aurebesh_title.png" alt="Aurebesh title">
 
-<div> <img src="assets/ben_title.png" alt="Ben Title" style="width: 100%; max-width: 600px; height: auto;"> </div>
-<div> <img src="assets/aurebesh_title.png" alt="Aurebesh Title" style="width: 95%; max-width: 600px; height: auto;"> </div>
-<div id="clock">00:00:00</div>
-
-
-<h1>
-    Total Clicks: <span id="click-count">0</span>
-</h1>
-
-<h1>
-    Rate: <span id="display-rate">0</span>
-</h1>
-
-
-<body style="background-color: rgb(5, 172, 238);">
-
-<div style="text-align: center; background-image: url('assets/podrace.png'); background-size: cover; background-position: center; min-height: 400px; padding: 20px;">
-    <img id="ben-img" src="assets/ben.png" alt="Ben" width="399" height="501">
-</div>
-<div>
-    <button id="rat_button" style="font-size: 24px; padding: 10px 20px; margin-top: 20px; display: inline-flex; align-items: center; gap: 10px;">
-        <img src="assets/rattstyerell.png" alt="Ratts Tyerell" style="width: 40px; height: 40px; object-fit: cover; border-radius: 8px;">
-        <span>Ratts Tyerell: <span id="rats-owned">0</span><span> Cost: <span id="rat-cost">20</span></span></span>
-    </button>
-</div>
+    <!-- mount points: main.js fills these in, see CONFIG.mounts -->
+    <div id="clock-slot"></div>
+    <div id="readout-slot"></div>
+    <div id="stage-slot"></div>
+    <div id="shop-slot"></div>
+    <div id="controls-slot"></div>
 </body>
-<button id="polyben_button" style="font-size: 24px; padding: 10px 20px; margin-top: 20px; display: inline-flex; align-items: center; gap: 10px;">
-    <img id="polyben_button_img" src="assets/benquad.png" alt="PolyBen" style="width: 40px; height: 40px; object-fit: cover; border-radius: 8px;">
-    <span id="polyben-text">Unlock PolyBen - Cost: 1000</span>
-</button>
-<div>
-    <button id="bt310quadra_button" style="font-size: 24px; padding: 10px 20px; margin-top: 20px; display: inline-flex; align-items: center; gap: 10px;">
-        <img id="bt310quadra_button_img" src="assets/bt310_quadra.png" alt="BT-310 Quadra" style="width: 40px; height: 40px; object-fit: cover; border-radius: 8px;">
-        <span id="bt310quadra-text">BT-310 Quadra: <span id="bt310quadra-owned">0</span> Cost: <span id="bt310quadra-cost">1500</span></span>
-    </button>
-</div>
-<button id="reset-clicks">
-    <span>Reset</span>
-</button> 
-
-<script src="src/main.js"></script>
-
-
 </html>

@@ -1,12 +1,11 @@
 /* =========================================================================
    Ben Quadinaros Clicker
    -------------------------------------------------------------------------
-   Everything lives here now: config at the top, classes in the middle,
-   boot at the bottom.
+   Every dynamic part of the page is built by the class that owns it.
+   index.html only holds static chrome plus a few empty mount points.
 
-   To add a new upgrade you should only ever have to touch two places:
-     1. add an entry to GENERATORS below
-     2. add the matching markup to index.html
+   To add a new upgrade you now touch exactly ONE place: the GENERATORS
+   array below. No HTML, no new ids.
    ========================================================================= */
 
 
@@ -19,6 +18,15 @@ const CONFIG = {
     tickMs: 1000,         // how often passive income is paid out
     clickSound: ASSETS + "mixkit-mouse-click-close-1113.wav",
     music: ASSETS + "backgroundmusic.wav",
+
+    // empty <div>s in index.html that the game fills in
+    mounts: {
+        clock: "clock-slot",
+        readouts: "readout-slot",
+        stage: "stage-slot",
+        shop: "shop-slot",
+        controls: "controls-slot",
+    },
 };
 
 /*
@@ -31,28 +39,21 @@ const GENERATORS = [
     {
         key: "rat",
         name: "Ratts Tyerell",
+        icon: ASSETS + "rattstyerell.png",
         baseCost: 20,
         costGrowth: 1.2,
         rate: 1,
         boost: 0,
-        elements: { button: "rat_button",
-                    owned: "rats-owned",
-                    cost: "rat-cost"
-        },
         storage: { owned: "rats-owned", cost: "rat-cost" },
     },
     {
         key: "bt310quadra",
         name: "BT-310 Quadra",
+        icon: ASSETS + "bt310_quadra.png",
         baseCost: 1500,
         costGrowth: 1.2,
         rate: 0,
         boost: 0.2,
-        elements: {
-            button: "bt310quadra_button",
-            owned: "bt310quadra-owned",
-            cost: "bt310quadra-cost",
-        },
         storage: { owned: "bt310quadras-owned", cost: "bt310quadra-cost" },
     },
 ];
@@ -66,13 +67,38 @@ const SKINS = {
 
 /* ------------------------------ helpers --------------------------------- */
 
+/**
+ * Tiny DOM builder. Roughly "createElement with batteries":
+ *     el("button", { class: "shop-button" }, [icon, label])
+ * Children may be elements or plain strings. Strings become text nodes, so
+ * game data can never be parsed as HTML.
+ */
+function el(tag, props = {}, children = []) {
+    const node = document.createElement(tag);
+
+    for (const [key, value] of Object.entries(props)) {
+        if (key === "class") node.className = value;
+        else if (key === "text") node.textContent = value;
+        else if (key.includes("-")) node.setAttribute(key, value);
+        else node[key] = value;
+    }
+
+    for (const child of [].concat(children)) {
+        node.appendChild(
+            typeof child === "string" ? document.createTextNode(child) : child
+        );
+    }
+
+    return node;
+}
+
 /** Thin typed wrapper over localStorage. Everything in there is a string. */
 class Save {
     static number(key, fallback) {
-        const raw = Number(localStorage.getItem(key));
-        return Number.isFinite(raw) && localStorage.getItem(key) !== null
-            ? raw
-            : fallback;
+        const raw = localStorage.getItem(key);
+        if (raw === null) return fallback;
+        const value = Number(raw);
+        return Number.isFinite(value) ? value : fallback;
     }
 
     static bool(key, fallback = false) {
@@ -106,41 +132,90 @@ class Sound {
 }
 
 
-/* ------------------------------ buttons --------------------------------- */
+/* ------------------------------ widgets --------------------------------- */
 
 /**
- * Base class for anything clickable in the game.
- * Subclasses implement onClick(); render() is optional.
+ * Base class for every piece of the UI.
+ *
+ * The contract is three steps, and it is always the same:
+ *   build()  -> create and return your DOM, stash refs to bits you update
+ *   mount()  -> attach that DOM to the page (done for you)
+ *   render() -> push current state into the DOM you built
+ *
+ * build() is NOT called from the constructor on purpose: a subclass can't
+ * assign its own fields until after super() has run, so building there would
+ * read half-initialised objects. Construct first, mount second.
  */
-class GameButton {
-    constructor(game, elementId, { sound = true } = {}) {
+class Widget {
+    constructor(game) {
         this.game = game;
-        this.element = document.getElementById(elementId);
+        this.element = null;
+    }
+
+    build() {
+        throw new Error(`${this.constructor.name} must implement build()`);
+    }
+
+    mount(parent) {
+        this.element = this.build();
+        parent.appendChild(this.element);
+        this.render();
+        return this;
+    }
+
+    render() {}
+}
+
+/** A Widget that responds to clicks. Subclasses just implement onClick(). */
+class GameButton extends Widget {
+    constructor(game, { sound = true } = {}) {
+        super(game);
         this.playsSound = sound;
+    }
 
-        if (!this.element) {
-            console.warn(`GameButton: no element with id "${elementId}"`);
-            return;
-        }
+    mount(parent) {
+        super.mount(parent);
 
+        // Arrow function so `this` stays the widget, not the DOM node.
         this.element.addEventListener("click", () => {
             if (this.playsSound) this.game.clickSound.play();
             this.onClick();
             this.game.refresh();
         });
+
+        return this;
     }
 
     onClick() {}
+}
 
-    render() {}
+/** A "Label: value" line in the header. */
+class Readout extends Widget {
+    constructor(game, label, getValue) {
+        super(game);
+        this.label = label;
+        this.getValue = getValue;
+    }
+
+    build() {
+        this.value = el("span");
+        return el("h1", { class: "readout" }, [`${this.label}: `, this.value]);
+    }
+
+    render() {
+        this.value.textContent = this.getValue();
+    }
 }
 
 /** The big Ben image. Click it, get clicks. */
 class ClickTarget extends GameButton {
-    constructor(game, elementId) {
-        super(game, elementId);
+    constructor(game) {
+        super(game);
         this.skin = Save.text("skin", "ben");
-        this.render();
+    }
+
+    build() {
+        return el("img", { class: "ben", alt: "Ben" });
     }
 
     onClick() {
@@ -154,7 +229,6 @@ class ClickTarget extends GameButton {
     }
 
     render() {
-        if (!this.element) return;
         this.element.src = SKINS[this.skin].img;
     }
 }
@@ -162,10 +236,11 @@ class ClickTarget extends GameButton {
 /** A buyable upgrade that produces clicks and/or boosts your rate. */
 class Generator extends GameButton {
     constructor(game, def) {
-        super(game, def.elements.button);
+        super(game);
 
         this.key = def.key;
         this.name = def.name;
+        this.icon = def.icon;
         this.rate = def.rate;
         this.boost = def.boost;
         this.costGrowth = def.costGrowth;
@@ -173,11 +248,19 @@ class Generator extends GameButton {
 
         this.owned = Save.number(this.storage.owned, 0);
         this.cost = Save.number(this.storage.cost, def.baseCost);
+    }
 
-        this.ownedLabel = document.getElementById(def.elements.owned);
-        this.costLabel = document.getElementById(def.elements.cost);
+    build() {
+        this.ownedLabel = el("span");
+        this.costLabel = el("span");
 
-        this.render();
+        return el("button", { class: "shop-button", id: `${this.key}_button` }, [
+            el("img", { class: "icon", src: this.icon, alt: this.name }),
+            el("span", {}, [
+                `${this.name}: `, this.ownedLabel,
+                " Cost: ", this.costLabel,
+            ]),
+        ]);
     }
 
     onClick() {
@@ -204,25 +287,30 @@ class Generator extends GameButton {
     }
 
     render() {
-        if (this.ownedLabel) this.ownedLabel.textContent = this.owned;
-        if (this.costLabel) this.costLabel.textContent = this.cost;
+        this.ownedLabel.textContent = this.owned;
+        this.costLabel.textContent = this.cost;
+        this.element.classList.toggle("affordable", this.game.clicks >= this.cost);
     }
 }
 
 /** One-time purchase that unlocks a skin, then toggles between the two. */
 class SkinButton extends GameButton {
-    constructor(game, { elementId, imgId, textId, unlockCost, skinKey, storageKey }) {
-        super(game, elementId);
-
+    constructor(game, { unlockCost, skinKey, storageKey }) {
+        super(game);
         this.unlockCost = unlockCost;
         this.skinKey = skinKey;
         this.storageKey = storageKey;
         this.unlocked = Save.bool(storageKey, false);
+    }
 
-        this.img = document.getElementById(imgId);
-        this.label = document.getElementById(textId);
+    build() {
+        this.icon = el("img", { class: "icon", alt: SKINS[this.skinKey].label });
+        this.label = el("span");
 
-        this.render();
+        return el("button", { class: "shop-button", id: `${this.skinKey}_button` }, [
+            this.icon,
+            this.label,
+        ]);
     }
 
     onClick() {
@@ -239,43 +327,47 @@ class SkinButton extends GameButton {
 
     render() {
         if (!this.unlocked) {
-            if (this.label) {
-                this.label.textContent =
-                    `Unlock ${SKINS[this.skinKey].label} - Cost: ${this.unlockCost}`;
-            }
+            this.label.textContent =
+                `Unlock ${SKINS[this.skinKey].label} - Cost: ${this.unlockCost}`;
+            this.icon.src = SKINS[this.skinKey].img;
+            this.element.classList.toggle(
+                "affordable", this.game.clicks >= this.unlockCost
+            );
             return;
         }
 
-        // Show the skin you'd switch TO, on both the label and the icon.
-        const showing = this.game.benButton.skin;
-        const other = showing === "ben" ? this.skinKey : "ben";
-
-        if (this.label) this.label.textContent = `Switch to ${SKINS[other].label}`;
-        if (this.img) this.img.src = SKINS[other].img;
+        // Once unlocked, show the skin you'd switch TO.
+        const other = this.game.benButton.skin === "ben" ? this.skinKey : "ben";
+        this.label.textContent = `Switch to ${SKINS[other].label}`;
+        this.icon.src = SKINS[other].img;
+        this.element.classList.add("affordable");
     }
 }
 
 /** Wipes your clicks (but not your upgrades), same as before. */
 class ResetButton extends GameButton {
+    build() {
+        return el("button", { class: "reset", id: "reset-clicks", text: "Reset" });
+    }
+
     onClick() {
         this.game.setClicks(0);
     }
 }
 
-
-/* ------------------------------ widgets --------------------------------- */
-
 /** The wall clock at the top of the page. */
-class Clock {
-    constructor(elementId) {
-        this.element = document.getElementById(elementId);
-        this.tick();
-        setInterval(() => this.tick(), 1000);
+class Clock extends Widget {
+    build() {
+        return el("div", { class: "clock", id: "clock" });
     }
 
-    tick() {
-        if (!this.element) return;
+    mount(parent) {
+        super.mount(parent);
+        setInterval(() => this.render(), 1000);
+        return this;
+    }
 
+    render() {
         const now = new Date();
         const pad = (n) => String(n).padStart(2, "0");
 
@@ -302,30 +394,51 @@ class Game {
     constructor() {
         this.clickPower = CONFIG.clickPower;
         this.clickSound = new Sound(CONFIG.clickSound);
-
         this.clicks = Save.number("totalClicks", 0);
 
-        this.clickLabel = document.getElementById("click-count");
-        this.rateLabel = document.getElementById("display-rate");
-
-        // Order matters: benButton exists before SkinButton reads its skin.
-        this.benButton = new ClickTarget(this, "ben-img");
-
+        this.benButton = new ClickTarget(this);
         this.generators = GENERATORS.map((def) => new Generator(this, def));
 
-        this.buttons = [
+        this.skinButton = new SkinButton(this, {
+            unlockCost: 1000,
+            skinKey: "polyben",
+            storageKey: "polyben_unlocked",
+        });
+
+        this.clock = new Clock(this);
+
+        this.readouts = [
+            new Readout(this, "Total Clicks", () => this.clicks),
+            new Readout(this, "Rate", () => this.rate),
+        ];
+
+        // Everything that needs redrawing when state changes.
+        this.widgets = [
             this.benButton,
             ...this.generators,
-            new SkinButton(this, {
-                elementId: "polyben_button",
-                imgId: "polyben_button_img",
-                textId: "polyben-text",
-                unlockCost: 1000,
-                skinKey: "polyben",
-                storageKey: "polyben_unlocked",
-            }),
-            new ResetButton(this, "reset-clicks"),
+            this.skinButton,
+            ...this.readouts,
         ];
+    }
+
+    /** Look up a mount point from CONFIG.mounts by name. */
+    slot(name) {
+        const node = document.getElementById(CONFIG.mounts[name]);
+        if (!node) throw new Error(`Missing mount point: #${CONFIG.mounts[name]}`);
+        return node;
+    }
+
+    /** Build the whole page. Order here is the order things appear. */
+    mount() {
+        this.clock.mount(this.slot("clock"));
+        this.readouts.forEach((readout) => readout.mount(this.slot("readouts")));
+        this.benButton.mount(this.slot("stage"));
+
+        const shop = this.slot("shop");
+        this.generators.forEach((generator) => generator.mount(shop));
+        this.skinButton.mount(shop);
+
+        new ResetButton(this).mount(this.slot("controls"));
     }
 
     /** Total clicks per second, from flat rates plus percentage boosts. */
@@ -351,11 +464,9 @@ class Game {
         Save.set("totalClicks", this.clicks);
     }
 
-    /** Redraw every label in the game. Cheap enough to just always do it. */
+    /** Redraw everything. Cheap enough to just always do it. */
     refresh() {
-        if (this.clickLabel) this.clickLabel.textContent = this.clicks;
-        if (this.rateLabel) this.rateLabel.textContent = this.rate;
-        this.buttons.forEach((button) => button.render());
+        this.widgets.forEach((widget) => widget.render());
     }
 
     tick() {
@@ -364,6 +475,7 @@ class Game {
     }
 
     start() {
+        this.mount();
         this.refresh();
         setInterval(() => this.tick(), CONFIG.tickMs);
     }
@@ -375,5 +487,4 @@ class Game {
 const game = new Game();
 game.start();
 
-new Clock("clock");
 new MusicPlayer(CONFIG.music);

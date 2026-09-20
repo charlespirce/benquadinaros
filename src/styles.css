@@ -1,0 +1,82 @@
+/* Ben Quadinaros Clicker — all presentation lives here, never in JS. */
+
+body {
+    background-color: rgb(5, 172, 238);
+    text-align: center;
+    font-family: system-ui, sans-serif;
+    margin: 0;
+    padding-bottom: 40px;
+}
+
+.title {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+}
+
+.clock {
+    font-size: 16px;
+}
+
+.readout {
+    text-align: center;
+    margin: 12px 0;
+}
+
+/* the podrace arena that Ben stands in */
+#stage-slot {
+    background-image: url("../assets/podrace.png");
+    background-size: cover;
+    background-position: center;
+    min-height: 400px;
+    padding: 20px;
+}
+
+.ben {
+    width: 399px;
+    height: 501px;
+    max-width: 90%;
+    object-fit: contain;
+    cursor: pointer;
+}
+
+#shop-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.shop-button {
+    font-size: 24px;
+    padding: 10px 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    opacity: 0.55;
+    transition: opacity 120ms ease, border-color 120ms ease;
+}
+
+/* Generator.render() adds this class when you can afford the upgrade. */
+.shop-button.affordable {
+    opacity: 1;
+    border-color: #1b6b2f;
+}
+
+.icon {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.reset {
+    margin-top: 24px;
+    font-size: 16px;
+    padding: 6px 16px;
+    cursor: pointer;
+}
