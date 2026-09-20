@@ -80,6 +80,16 @@ const GENERATORS = [
         boost: 0.2,                              // ...but makes everything else +20%
         storage: { owned: "bt310quadras-owned", cost: "bt310quadra-cost" },
     },
+    { // --- third upgrade ----
+        key: "mawhonic",
+        name: "Mawhonic",
+        icon: ASSETS + "mawhonic.png",
+        baseCost: 10000,
+        costGrowth: 1.2,
+        rate: 10,                                // earns 10 clicks/sec
+        boost: 0,                                // no percentage bonus
+        storage: { owned: "mawhonics-owned", cost: "mawhonic-cost" },
+    },
 ];
 
 // The two skins the big Ben image can wear.
