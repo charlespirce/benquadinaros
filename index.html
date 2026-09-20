@@ -1,23 +1,54 @@
 <!DOCTYPE html>
+<!-- Tells the browser "this is modern HTML". Always the first line. -->
+
+<!-- lang="en" tells screen readers and translators the page is English. -->
 <html lang="en">
+
+<!-- <head> holds information ABOUT the page. Nothing here is visible. -->
 <head>
+    <!-- How the text is encoded. UTF-8 means accents and emoji work. -->
     <meta charset="utf-8">
+
+    <!-- Makes the page scale properly on phones instead of zooming out. -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- The text shown in the browser tab. -->
     <title>Ben Quadinaros Clicker</title>
+
+    <!-- Loads the stylesheet: everything about how the page LOOKS. -->
     <link rel="stylesheet" href="src/styles.css">
+
+    <!-- Loads the game code: everything about how the page BEHAVES.
+         `defer` means "download it now, but do not run it until the whole
+         page has been read". That guarantees the empty <div>s below
+         already exist by the time main.js goes looking for them, which is
+         why the code can run at the top level without any setup wrapper. -->
     <script src="src/main.js" defer></script>
 </head>
 
+<!-- <body> holds everything the user can actually see. -->
 <body>
-    <!-- static chrome -->
+
+    <!-- ===== STATIC CHROME =====
+         These never change while the game runs, so they are plain HTML.
+         `alt` is the text shown if an image fails to load, and what a
+         screen reader announces. -->
     <img class="title" src="assets/ben_title.png" alt="Ben Quadinaros Clicker">
     <img class="title" src="assets/aurebesh_title.png" alt="Aurebesh title">
 
-    <!-- mount points: main.js fills these in, see CONFIG.mounts -->
-    <div id="clock-slot"></div>
-    <div id="readout-slot"></div>
-    <div id="stage-slot"></div>
-    <div id="shop-slot"></div>
-    <div id="controls-slot"></div>
+    <!-- ===== MOUNT POINTS =====
+         These five <div>s are deliberately EMPTY. main.js finds each one
+         by its id and builds the real content inside it.
+
+         The ids must match the names in CONFIG.mounts at the top of
+         main.js. If you rename one here, rename it there too - the
+         slot() function will throw a clear error if they disagree. -->
+
+    <div id="clock-slot"></div>      <!-- Clock writes the time here -->
+    <div id="readout-slot"></div>    <!-- "Total Clicks" and "Rate" lines -->
+    <div id="stage-slot"></div>      <!-- the podrace background + Ben image -->
+    <div id="shop-slot"></div>       <!-- every buy button, added in order -->
+    <div id="controls-slot"></div>   <!-- the reset button -->
+
 </body>
 </html>

@@ -1,79 +1,122 @@
-/* Ben Quadinaros Clicker — all presentation lives here, never in JS. */
+/* =========================================================================
+   BEN QUADINAROS CLICKER - STYLES
 
+   All presentation lives in this file. main.js never sets colours or sizes;
+   it only adds and removes CSS CLASS NAMES, and the rules below decide what
+   those classes look like. Keeping it split this way means you can restyle
+   the whole game without touching any JavaScript.
+
+   How a CSS rule is shaped:
+
+       selector {  property: value;  }
+
+   Selectors used in this file:
+       body          - matches the element type <body>
+       .title        - matches any element with class="title"
+       #shop-slot    - matches the single element with id="shop-slot"
+   So a dot means "class" and a hash means "id".
+   ========================================================================= */
+
+
+/* The whole page. Every rule here is inherited by everything inside. */
 body {
-    background-color: rgb(5, 172, 238);
-    text-align: center;
-    font-family: system-ui, sans-serif;
-    margin: 0;
-    padding-bottom: 40px;
+    background-color: rgb(5, 172, 238);      /* the blue. rgb = red,green,blue 0-255 */
+    text-align: center;                      /* centre all text and inline images */
+    font-family: system-ui, sans-serif;      /* use the OS font; fall back to any
+                                                plain font if that is unavailable */
+    margin: 0;                               /* remove the browser's default gap
+                                                around the edge of the page */
+    padding-bottom: 40px;                    /* breathing room under the last button */
 }
 
+/* The two title images at the top. */
 .title {
-    width: 100%;
-    max-width: 600px;
-    height: auto;
+    width: 100%;          /* fill the available width... */
+    max-width: 600px;     /* ...but never grow beyond 600px on a big screen */
+    height: auto;         /* keep the original proportions, do not squash */
 }
 
+/* The running wall clock. */
 .clock {
     font-size: 16px;
 }
 
+/* The "Total Clicks: 42" and "Rate: 7" lines, built by the Readout class. */
 .readout {
     text-align: center;
-    margin: 12px 0;
+    margin: 12px 0;       /* two values = 12px top and bottom, 0 left and right */
 }
 
-/* the podrace arena that Ben stands in */
+/* The podrace arena that Ben stands in.
+   This targets the mount point itself by its id, so the Clicktarget class
+   only has to create the image - the background belongs to the container. */
 #stage-slot {
+    /* The ../ is important: paths in a CSS file are relative to the CSS
+       file, not the page. styles.css lives in src/, so we go up one
+       level to reach assets/. */
     background-image: url("../assets/podrace.png");
-    background-size: cover;
-    background-position: center;
-    min-height: 400px;
-    padding: 20px;
+    background-size: cover;         /* scale the image to fill the whole box */
+    background-position: center;    /* crop evenly from the middle */
+    min-height: 400px;              /* stay at least this tall even if empty */
+    padding: 20px;                  /* space between the edge and Ben */
 }
 
+/* The big clickable Ben image. */
 .ben {
     width: 399px;
     height: 501px;
-    max-width: 90%;
-    object-fit: contain;
-    cursor: pointer;
+    max-width: 90%;          /* shrink on narrow screens instead of overflowing */
+    object-fit: contain;     /* if it does shrink, letterbox rather than distort */
+    cursor: pointer;         /* show the hand cursor, hinting "this is clickable" */
 }
 
+/* The container holding every buy button. */
 #shop-slot {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
+    display: flex;              /* flexbox: lay the children out in a line */
+    flex-direction: column;     /* stack them vertically instead of side by side */
+    align-items: center;        /* centre them horizontally */
+    gap: 12px;                  /* space BETWEEN buttons, with none at the ends */
     margin-top: 20px;
 }
 
+/* Every buy button: the upgrades and the skin button.
+   Created by Generator.build() and SkinButton.build(). */
 .shop-button {
     font-size: 24px;
-    padding: 10px 20px;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
+    padding: 10px 20px;         /* 10px top/bottom, 20px left/right */
+    display: inline-flex;       /* flexbox again, to line the icon up with
+                                   the text and centre them against each other */
+    align-items: center;        /* vertically centre the icon next to the text */
+    gap: 10px;                  /* space between the icon and the label */
     cursor: pointer;
-    border-radius: 8px;
-    border: 2px solid transparent;
-    opacity: 0.55;
+    border-radius: 8px;         /* rounded corners */
+    border: 2px solid transparent;  /* an invisible border that is always there,
+                                       so the button does not jump by 2px when
+                                       the coloured border appears below */
+    opacity: 0.55;              /* dimmed by default = you cannot afford it */
     transition: opacity 120ms ease, border-color 120ms ease;
+                                /* animate those two properties over 120ms
+                                   instead of snapping instantly */
 }
 
-/* Generator.render() adds this class when you can afford the upgrade. */
-.shop-button.affordable {
-    opacity: 1;
-    border-color: #1b6b2f;
+/* Added and removed by render() in Generator and SkinButton:
+       this.element.classList.toggle("affordable", this.game.clicks >= this.cost);
+   So the JS decides WHEN, and this rule decides WHAT IT LOOKS LIKE. */
+.shop-button.affordable {       /* both classes on the same element */
+    opacity: 1;                 /* fully bright = you can afford this */
+    border-color: #1b6b2f;      /* green outline. # is a hex colour code */
 }
 
+/* The little 40x40 picture inside each button. */
 .icon {
     width: 40px;
     height: 40px;
-    object-fit: cover;
+    object-fit: cover;      /* fill the square, cropping overflow, so that
+                               differently shaped source images all match */
     border-radius: 8px;
 }
 
+/* The reset button at the very bottom. */
 .reset {
     margin-top: 24px;
     font-size: 16px;
