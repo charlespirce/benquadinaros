@@ -1,4 +1,4 @@
-const jacob_song = new Audio("assests/backgroundmusic.wav");
+const jacob_song = new Audio("assets/backgroundmusic.wav");
 jacob_song.loop = true;
 
 function play_bgmusic() {
