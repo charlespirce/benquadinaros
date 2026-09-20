@@ -83,7 +83,7 @@ const GENERATORS = [
     { // --- third upgrade ----
         key: "mawhonic",
         name: "Mawhonic",
-        icon: ASSETS + "mawhonic.png",
+        icon: ASSETS + "mawhonic.jpeg",
         baseCost: 10000,
         costGrowth: 1.2,
         rate: 10,                                // earns 10 clicks/sec
