@@ -35,7 +35,10 @@ const GENERATORS = [
         costGrowth: 1.2,
         rate: 1,
         boost: 0,
-        elements: { button: "rat_button", owned: "rats-owned", cost: "rat-cost" },
+        elements: { button: "rat_button",
+                    owned: "rats-owned",
+                    cost: "rat-cost"
+        },
         storage: { owned: "rats-owned", cost: "rat-cost" },
     },
     {
