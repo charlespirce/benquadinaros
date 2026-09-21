@@ -91,6 +91,26 @@ const GENERATORS = [
         boost: 0,                                // no percentage bonus
         storage: { owned: "mawhonics-owned", cost: "mawhonic-cost" },
     },
+    { // --- fourth upgrade ----
+        key:"mars_guo",
+        name:"Mars Guo",
+        icon: ASSETS + "mars_guo.png",
+        baseCost: 25000,
+        costGrowth: 1.2,
+        rate: 30,
+        boost:0.05,
+        storage: { owned: "mars_guo-owned", cost: "mars_guo-cost" },   
+    },
+    { // --- fifth upgrade ----
+        key:"sebulba",
+        name:"Sebulba",
+        icon: ASSETS + "sebulba.png",
+        baseCost: 100000,
+        costGrowth: 1.2,
+        rate: 100,
+        boost:0,
+        storage: { owned: "sebulba-owned", cost: "sebulba-cost" },   
+    }
 ];
 
 /*
@@ -128,6 +148,16 @@ const CLICK_UPGRADES = [
         multiplier: 0.25,            // ...but makes every click 25% stronger
         storage: { owned: "wansandage-owned", cost: "wansandage-cost" },
     },
+    {
+        key:"ebe_e_endocott",
+        name:" Ebe E. Endocott",
+        icon: ASSETS + "ebe_e_endocott.jpg",
+        baseCost: 5000,
+        costGrowth: 1.4,
+        power: 5,
+        multiplier: 0,
+        storage: { owned: "ebe_e_endocott-owned", cost: "ebe_e_endocott-cost" },
+    }
 ];
 
 // The two skins the big Ben image can wear.
