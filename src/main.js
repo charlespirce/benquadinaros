@@ -132,19 +132,24 @@ const CLICK_UPGRADES = [
 
 // The two skins the big Ben image can wear.
 // This is an object used as a lookup table: SKINS["ben"] gives the first one.
-// `clickBonus` is flat click power granted WHILE THAT SKIN IS WORN.
-// PolyBen has four arms, so he clicks harder - which turns the skin
+// `rateMultiplier` multiplies your PASSIVE INCOME while that skin is worn.
+// PolyBen has four arms, so his pod runs harder - which turns the skin
 // toggle from pure decoration into a real choice.
+//
+// 1 means "no change" (not 0 - multiplying by zero would wipe your income
+// out entirely). 1.5 means "one and a half times as fast", i.e. +50%.
 const SKINS = {
-    ben: { img: ASSETS + "ben.png", label: "Ben", clickBonus: 0 },
-    polyben: { img: ASSETS + "benquad.png", label: "PolyBen", clickBonus: 3 },
+    ben: { img: ASSETS + "ben.png", label: "Ben", rateMultiplier: 1 },
+    polyben: { img: ASSETS + "benquad.png", label: "PolyBen", rateMultiplier: 1.5 },
 };
 
-// Builds the little " (+3/click)" note shown on the skin button.
+// Builds the little " (1.5x rate)" note shown on the skin button.
 // Returns an empty string for a skin with no bonus, so nothing is shown.
-function skinBonusText(skinKey) {
-    const bonus = SKINS[skinKey].clickBonus;
-    return bonus > 0 ? ` (+${bonus}/click)` : "";
+function skinRateText(skinKey) {
+    const multiplier = SKINS[skinKey].rateMultiplier;
+    // `!==` is "not equal". A skin with a multiplier of exactly 1 changes
+    // nothing, so there is no point advertising it.
+    return multiplier !== 1 ? ` (${multiplier}x rate)` : "";
 }
 
 
@@ -661,7 +666,7 @@ class SkinButton extends GameButton {
         if (!this.unlocked) {
             this.label.textContent =
                 `Unlock ${SKINS[this.skinKey].label}` +
-                `${skinBonusText(this.skinKey)} - Cost: ${this.unlockCost}`;
+                `${skinRateText(this.skinKey)} - Cost: ${this.unlockCost}`;
             this.icon.src = SKINS[this.skinKey].img;
             this.element.classList.toggle(
                 "affordable", this.game.clicks >= this.unlockCost
@@ -674,7 +679,7 @@ class SkinButton extends GameButton {
         const other = this.game.benButton.skin === "ben" ? this.skinKey : "ben";
         // Includes the bonus, so you can see what the swap is worth.
         this.label.textContent =
-            `Switch to ${SKINS[other].label}${skinBonusText(other)}`;
+            `Switch to ${SKINS[other].label}${skinRateText(other)}`;
         this.icon.src = SKINS[other].img;
         this.element.classList.add("affordable");   // always usable now, so
                                                     // never show it dimmed
@@ -833,14 +838,15 @@ class Game {
         this.benButton.mount(this.slot("stage"));
 
         // Click-power upgrades go in their own section, above the
-        // generators. The skin button sits with them because PolyBen is
-        // really just another source of click power.
+        // generators.
         const clickShop = this.slot("clickShop");
         this.clickUpgrades.forEach((upgrade) => upgrade.mount(clickShop));
-        this.skinButton.mount(clickShop);
 
+        // The skin button sits with the generators, because PolyBen
+        // multiplies your passive income rather than your click power.
         const shop = this.slot("shop");   // looked up once, reused below
         this.generators.forEach((generator) => generator.mount(shop));
+        this.skinButton.mount(shop);
 
         // Created and mounted in one line - nothing needs to refer to the
         // reset button again afterwards, so it does not need a name.
@@ -864,13 +870,12 @@ class Game {
             (sum, u) => sum + u.powerMultiplier, 0
         );
 
-        // Flat bonus from whichever skin you are currently wearing.
-        // Wearing PolyBen gives +3; wearing plain Ben gives +0.
-        const skinBonus = SKINS[this.benButton.skin].clickBonus;
+        // Skins do NOT affect click power - they multiply your passive
+        // income instead. See the rate getter below.
 
-        // e.g. base 1 + 2 Mawhonic + PolyBen = 6, with one Wan Sandage
-        //      -> 6 * 1.25 = 7 clicks per click
-        return Math.floor((CONFIG.baseClickPower + flat + skinBonus) * (1 + mult));
+        // e.g. base 1 + 2 Gasgano = 3, with one Wan Sandage
+        //      -> 3 * 1.25 = 3 clicks per click
+        return Math.floor((CONFIG.baseClickPower + flat) * (1 + mult));
     }
 
     // Your total clicks per second. A getter, so `game.rate` recalculates
@@ -883,8 +888,14 @@ class Game {
         const flat = this.generators.reduce((sum, g) => sum + g.flatRate, 0);
         const boost = this.generators.reduce((sum, g) => sum + g.rateBoost, 0);
 
-        // e.g. 5 clicks/sec with two BT-310s = 5 * (1 + 0.4) = 7
-        return Math.floor(flat * (1 + boost));
+        // Multiplier from whichever skin you are currently wearing.
+        // Wearing PolyBen gives 1.5; wearing plain Ben gives 1 (no change).
+        const skinMultiplier = SKINS[this.benButton.skin].rateMultiplier;
+
+        // Applied last, on top of everything else. So:
+        // e.g. 5 clicks/sec with two BT-310s and PolyBen on
+        //      -> 5 * (1 + 0.4) * 1.5 = 10 clicks/sec
+        return Math.floor(flat * (1 + boost) * skinMultiplier);
     }
 
     addClicks(amount) {
