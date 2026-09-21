@@ -171,6 +171,8 @@ const CLICK_UPGRADES = [
 const SKINS = {
     ben: { img: ASSETS + "ben.png", label: "Ben", rateMultiplier: 1 },
     polyben: { img: ASSETS + "benquad.png", label: "PolyBen", rateMultiplier: 1.5 },
+    ben_figure: { img: ASSETS + "ben_figure.png", label: "Ben Figure", rateMultiplier: 2 },
+    legoben: { img: ASSETS + "lego_ben.png", label: "Lego Ben", rateMultiplier: 2.5 },
 };
 
 // Builds the little " (1.5x rate)" note shown on the skin button.
@@ -822,6 +824,17 @@ class Game {
             skinKey: "polyben",
             storageKey: "polyben_unlocked",
         });
+        this.figureSkinButton = new SkinButton(this, {
+            unlockCost: 10000,
+            skinKey: "ben_figure",
+            storageKey: "ben_figure_unlocked",
+        });
+        this.legoSkinButton = new SkinButton(this, {
+            unlockCost: 100000,
+            skinKey: "legoben",
+            storageKey: "legoben_unlocked",
+        });
+
 
         this.clock = new Clock(this);
 
@@ -841,6 +854,8 @@ class Game {
             ...this.generators,     // unpacked, so we get a flat list
             ...this.clickUpgrades,  // same again for the click upgrades
             this.skinButton,
+            this.figureSkinButton,
+            this.legoSkinButton,
             ...this.readouts,
         ];
     }
@@ -877,6 +892,8 @@ class Game {
         const shop = this.slot("shop");   // looked up once, reused below
         this.generators.forEach((generator) => generator.mount(shop));
         this.skinButton.mount(shop);
+        this.figureSkinButton.mount(shop);
+        this.legoSkinButton.mount(shop);
 
         // Created and mounted in one line - nothing needs to refer to the
         // reset button again afterwards, so it does not need a name.
