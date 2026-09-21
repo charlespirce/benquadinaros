@@ -148,6 +148,11 @@ body {
     cursor: pointer;        /* show the hand cursor, hinting "this is clickable" */
 }
 
+/* Makes ben "pop" when clicked */
+.ben:active {
+    transform: scale(0.95);
+}
+
 
 /* -------------------------------------------------------------------------
    RIGHT COLUMN - the shop
@@ -207,7 +212,7 @@ body {
                                    icons form a neat column */
     text-align: left;
     gap: 10px;                  /* space between the icon and the label */
-    cursor: pointer;
+    cursor: default;
     border-radius: 8px;
     border: 2px solid transparent;  /* an invisible border that is always there,
                                        so the button does not jump by 2px when
@@ -225,6 +230,17 @@ body {
 .shop-button.affordable {       /* both classes on the same element */
     opacity: 1;                 /* fully bright = you can afford this */
     border-color: #1b6b2f;      /* green outline. # is a hex colour code */
+    cursor: pointer;
+}
+
+/* Changes the appearance of the button slightly when the cursor is hovering over it */
+.shop-button.affordable:hover {
+    opacity: 0.85;
+    border-color: #1b6b2f;
+}
+
+.shop-button.affordable:active {
+    transform: scale(0.97);
 }
 
 /* The little 40x40 picture inside each button. */
