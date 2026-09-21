@@ -29,36 +29,49 @@
 <!-- <body> holds everything the user can actually see. -->
 <body>
 
-    <!-- ===== STATIC CHROME =====
-         These never change while the game runs, so they are plain HTML.
-         `alt` is the text shown if an image fails to load, and what a
-         screen reader announces. -->
-    <img class="title" src="assets/ben_title.png" alt="Ben Quadinaros Clicker">
-    <img class="title" src="assets/aurebesh_title.png" alt="Aurebesh title">
+<!-- ===== THE TWO-COLUMN LAYOUT =====
+     .layout is exactly as tall as the window and never scrolls itself.
+     Instead, each of the two columns inside it scrolls on its own. That
+     is what lets you scroll the shop without Ben moving at all. -->
+<div class="layout">
 
-    <!-- ===== MOUNT POINTS =====
-         These five <div>s are deliberately EMPTY. main.js finds each one
-         by its id and builds the real content inside it.
+    <!-- ---------- LEFT COLUMN: Ben and the numbers ---------- -->
+    <!-- <main> means "the primary content". It behaves like a <div> but
+         tells screen readers which part is the main event. -->
+    <main class="stage-column">
 
-         The ids must match the names in CONFIG.mounts at the top of
-         main.js. If you rename one here, rename it there too - the
-         slot() function will throw a clear error if they disagree. -->
+        <!-- Static chrome: these never change while the game runs, so
+             they are plain HTML rather than being built by main.js.
+             `alt` is the text shown if an image fails to load, and what
+             a screen reader announces. -->
+        <img class="title" src="assets/ben_title.png" alt="Ben Quadinaros Clicker">
+        <img class="title" src="assets/aurebesh_title.png" alt="Aurebesh title">
 
-    <div id="clock-slot"></div>      <!-- Clock writes the time here -->
-    <div id="readout-slot"></div>    <!-- "Total Clicks", "Per Click", "Rate" -->
-    <div id="stage-slot"></div>      <!-- the podrace background + Ben image -->
+        <div id="clock-slot"></div>      <!-- Clock writes the time here -->
+        <div id="readout-slot"></div>    <!-- "Total Clicks", "Per Click", "Rate" -->
+        <div id="stage-slot"></div>      <!-- podrace background + the Ben image -->
+    </main>
 
-    <!-- The two shop sections. The <h2> headings are static text, so they
-         stay in the HTML; the buttons underneath are built by main.js.
-         Adding a new upgrade to an existing section needs no change here -
-         only adding a whole new SECTION would. -->
-    <h2 class="shop-heading">Click Power</h2>
-    <div id="click-shop-slot"></div>   <!-- CLICK_UPGRADES + the skin button -->
+    <!-- ---------- RIGHT COLUMN: the shop ---------- -->
+    <!-- <aside> means "related, but off to the side". Again it behaves
+         like a <div>; the name is for screen readers and for whoever
+         reads this file next. -->
+    <aside class="shop-column">
 
-    <h2 class="shop-heading">Generators</h2>
-    <div id="shop-slot"></div>         <!-- GENERATORS (passive income) -->
+        <!-- The two shop sections. The <h2> headings are static text, so
+             they stay in the HTML; the buttons underneath are built by
+             main.js. Adding a new upgrade to an existing section needs no
+             change here - only adding a whole new SECTION would. -->
+        <h2 class="shop-heading">Click Power</h2>
+        <div id="click-shop-slot"></div>   <!-- CLICK_UPGRADES -->
 
-    <div id="controls-slot"></div>   <!-- the reset button -->
+        <h2 class="shop-heading">Generators</h2>
+        <div id="shop-slot"></div>         <!-- GENERATORS + the skin button -->
+
+        <div id="controls-slot"></div>     <!-- the reset button -->
+    </aside>
+
+</div>
 
 </body>
 </html>

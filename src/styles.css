@@ -18,22 +18,79 @@
    ========================================================================= */
 
 
-/* The whole page. Every rule here is inherited by everything inside. */
+/* -------------------------------------------------------------------------
+   COLOURS
+   Custom properties (often called "CSS variables"). Defining them once on
+   :root - which means the whole document - lets every rule below refer to
+   them with var(). Change the colour scheme here and the whole page follows.
+   ------------------------------------------------------------------------- */
+:root {
+    --sky: rgb(5, 172, 238);        /* the main background blue */
+    --panel: rgb(4, 146, 202);      /* slightly darker blue for the shop */
+    --panel-edge: rgba(0, 0, 0, 0.2);   /* rgba = red,green,blue,opacity */
+}
+
+
+/* -------------------------------------------------------------------------
+   PAGE SHELL
+   ------------------------------------------------------------------------- */
+
+/* html and body must BOTH be told to fill the window height, otherwise a
+   percentage height on anything inside them has nothing to measure against. */
+html,
 body {
-    background-color: rgb(5, 172, 238);      /* the blue. rgb = red,green,blue 0-255 */
-    text-align: center;                      /* centre all text and inline images */
-    font-family: system-ui, sans-serif;      /* use the OS font; fall back to any
-                                                plain font if that is unavailable */
-    margin: 0;                               /* remove the browser's default gap
-                                                around the edge of the page */
-    padding-bottom: 40px;                    /* breathing room under the last button */
+    height: 100%;
+}
+
+body {
+    background-color: var(--sky);
+    text-align: center;
+    font-family: system-ui, sans-serif;   /* use the OS font; fall back to any
+                                             plain font if unavailable */
+    margin: 0;              /* remove the browser's default gap around the page */
+    overflow: hidden;       /* the PAGE itself never scrolls. Each column
+                               scrolls on its own instead - see below. */
+}
+
+/* The two-column container.
+   `display: flex` lays its children out in a row by default, so the two
+   columns sit side by side automatically. */
+.layout {
+    display: flex;
+    height: 100vh;          /* vh = "viewport height", so 100vh is exactly
+                               the height of the window */
+}
+
+
+/* -------------------------------------------------------------------------
+   LEFT COLUMN - Ben and the readouts
+   ------------------------------------------------------------------------- */
+
+.stage-column {
+    flex: 1;                /* "take up all the leftover width". The shop has
+                               a fixed width, so this fills whatever remains */
+    overflow-y: auto;       /* if the window is too short, THIS column gets
+                               its own scrollbar - independent of the shop */
+    display: flex;
+    flex-direction: column; /* stack titles, clock, readouts and Ben vertically */
+    min-width: 0;           /* stops a flex child refusing to shrink below the
+                               width of its contents. A well-known flexbox
+                               gotcha: without it, wide content can push the
+                               shop column off the screen */
 }
 
 /* The two title images at the top. */
 .title {
-    width: 100%;          /* fill the available width... */
-    max-width: 600px;     /* ...but never grow beyond 600px on a big screen */
-    height: auto;         /* keep the original proportions, do not squash */
+    width: 100%;            /* fill the available width... */
+    max-width: 600px;       /* ...but never grow beyond 600px on a big screen */
+    height: auto;           /* keep the original proportions, do not squash */
+    align-self: center;     /* centre within the flex column */
+
+    /* Shrink the titles on a SHORT window. Without this the titles and
+       readouts alone can be taller than the window, which forces the left
+       column to scroll and lets Ben slide out of view. */
+    max-height: 13vh;
+    object-fit: contain;    /* letterbox rather than squash when capped */
 }
 
 /* The running wall clock. */
@@ -41,14 +98,20 @@ body {
     font-size: 16px;
 }
 
-/* The "Total Clicks: 42" and "Rate: 7" lines, built by the Readout class. */
+/* The "Total Clicks: 42" / "Per Click: 2" / "Rate: 7" lines. */
 .readout {
     text-align: center;
-    margin: 12px 0;       /* two values = 12px top and bottom, 0 left and right */
+    margin: 6px 0;          /* two values = 6px top and bottom, 0 left/right */
+
+    /* clamp(min, preferred, max) picks the middle value but never goes
+       outside the outer two. Here the text scales with window HEIGHT
+       (vh), so three readouts plus the titles still leave room for Ben
+       on a short screen, and it stays readable on a tall one. */
+    font-size: clamp(17px, 3.2vh, 32px);
 }
 
 /* The podrace arena that Ben stands in.
-   This targets the mount point itself by its id, so the Clicktarget class
+   This targets the mount point itself by its id, so the ClickTarget class
    only has to create the image - the background belongs to the container. */
 #stage-slot {
     /* The ../ is important: paths in a CSS file are relative to the CSS
@@ -57,40 +120,106 @@ body {
     background-image: url("../assets/podrace.png");
     background-size: cover;         /* scale the image to fill the whole box */
     background-position: center;    /* crop evenly from the middle */
-    min-height: 400px;              /* stay at least this tall even if empty */
     padding: 20px;                  /* space between the edge and Ben */
+
+    flex: 1;                        /* grow to fill the leftover height, so the
+                                       arena reaches the bottom of the window */
+    min-height: 0;                  /* the vertical twin of the min-width:0
+                                       above. By default a flex item refuses
+                                       to shrink below its content's natural
+                                       size - here Ben's full 501px - which
+                                       would push the column taller than the
+                                       window. This allows it to shrink, so
+                                       Ben's max-height:100% can take effect */
+    display: flex;                  /* centre Ben inside it, both ways */
+    align-items: center;            /* vertical centring */
+    justify-content: center;        /* horizontal centring */
 }
 
 /* The big clickable Ben image. */
 .ben {
-    width: 399px;
-    height: 501px;
-    max-width: 90%;          /* shrink on narrow screens instead of overflowing */
-    object-fit: contain;     /* if it does shrink, letterbox rather than distort */
-    cursor: pointer;         /* show the hand cursor, hinting "this is clickable" */
+    /* `auto` for both, so the image keeps its natural 399x501 shape and the
+       two max- rules below shrink it proportionally when space is tight. */
+    width: auto;
+    height: auto;
+    max-width: 90%;
+    max-height: 100%;       /* never taller than the arena, so he cannot
+                               overflow and force the column to scroll */
+    cursor: pointer;        /* show the hand cursor, hinting "this is clickable" */
+}
+
+
+/* -------------------------------------------------------------------------
+   RIGHT COLUMN - the shop
+   ------------------------------------------------------------------------- */
+
+.shop-column {
+    width: 360px;           /* a fixed width; the left column takes the rest */
+    flex-shrink: 0;         /* never let flexbox squash it to fit */
+    overflow-y: auto;       /* THE IMPORTANT LINE: this panel gets its own
+                               scrollbar, so scrolling here leaves Ben alone */
+    background-color: var(--panel);
+    border-left: 2px solid var(--panel-edge);
+    padding: 0 16px 24px;   /* three values = 0 top, 16px sides, 24px bottom */
+    box-sizing: border-box; /* make width:360px include the padding rather
+                               than adding to it. Without this the column is
+                               really 392px wide and the sums stop working */
+}
+
+/* Headings above each shop section ("Click Power" / "Generators"). */
+.shop-heading {
+    margin: 20px 0 10px;
+    font-size: 20px;
+    letter-spacing: 1px;    /* slightly spaced out, so it reads as a label */
+
+    /* `sticky` means "scroll normally until you hit this offset, then stay
+       put". So each heading pins to the top of the shop panel while you
+       scroll past its section, and you never lose track of which is which. */
+    position: sticky;
+    top: 0;
+    background-color: var(--panel);   /* opaque, so buttons scroll UNDER it
+                                         instead of showing through */
+    z-index: 1;             /* draw it above the buttons it overlaps */
+    padding: 8px 0;
+}
+
+/* The two shop sections. Both get identical layout, so they share one
+   rule rather than duplicating the properties. A comma between selectors
+   means "apply this to either of these". */
+#click-shop-slot,
+#shop-slot {
+    display: flex;              /* flexbox: lay the children out in a line */
+    flex-direction: column;     /* stack them vertically */
+    align-items: stretch;       /* make every button the full column width,
+                                   so they line up as a tidy list */
+    gap: 10px;                  /* space BETWEEN buttons, with none at the ends */
 }
 
 /* Every buy button: the upgrades and the skin button.
-   Created by Generator.build() and SkinButton.build(). */
+   Created by Upgrade.build() and SkinButton.build(). */
 .shop-button {
-    font-size: 24px;
-    padding: 10px 20px;         /* 10px top/bottom, 20px left/right */
-    display: inline-flex;       /* flexbox again, to line the icon up with
-                                   the text and centre them against each other */
+    font-size: 17px;
+    padding: 10px 14px;
+    display: flex;              /* flexbox again, to line the icon up with
+                                   the text */
     align-items: center;        /* vertically centre the icon next to the text */
+    justify-content: flex-start;/* line everything up from the left, so the
+                                   icons form a neat column */
+    text-align: left;
     gap: 10px;                  /* space between the icon and the label */
     cursor: pointer;
-    border-radius: 8px;         /* rounded corners */
+    border-radius: 8px;
     border: 2px solid transparent;  /* an invisible border that is always there,
                                        so the button does not jump by 2px when
                                        the coloured border appears below */
+    box-sizing: border-box;
     opacity: 0.55;              /* dimmed by default = you cannot afford it */
     transition: opacity 120ms ease, border-color 120ms ease;
                                 /* animate those two properties over 120ms
                                    instead of snapping instantly */
 }
 
-/* Added and removed by render() in Generator and SkinButton:
+/* Added and removed by render() in Upgrade and SkinButton:
        this.element.classList.toggle("affordable", this.game.clicks >= this.cost);
    So the JS decides WHEN, and this rule decides WHAT IT LOOKS LIKE. */
 .shop-button.affordable {       /* both classes on the same element */
@@ -102,12 +231,13 @@ body {
 .icon {
     width: 40px;
     height: 40px;
+    flex-shrink: 0;         /* keep it square even if the label is long */
     object-fit: cover;      /* fill the square, cropping overflow, so that
                                differently shaped source images all match */
     border-radius: 8px;
 }
 
-/* The reset button at the very bottom. */
+/* The reset button at the bottom of the shop column. */
 .reset {
     margin-top: 24px;
     font-size: 16px;
@@ -115,19 +245,39 @@ body {
     cursor: pointer;
 }
 
-/* Headings above each shop section ("Click Power" / "Generators"). */
-.shop-heading {
-    margin: 28px 0 4px;     /* 28px above, 4px below, 0 left/right */
-    font-size: 20px;
-    letter-spacing: 1px;    /* slightly spaced out, so it reads as a label */
-}
 
-/* The click-power shop. Same layout rules as the generator shop, so both
-   selectors share one block rather than duplicating the properties. */
-#click-shop-slot,
-#shop-slot {
-    display: flex;              /* flexbox: lay the children out in a line */
-    flex-direction: column;     /* stack them vertically */
-    align-items: center;        /* centre them horizontally */
-    gap: 12px;                  /* space BETWEEN buttons */
+/* -------------------------------------------------------------------------
+   NARROW SCREENS (phones)
+
+   A MEDIA QUERY applies the rules inside it only when the condition is
+   true. Below 800px wide there is no room for two columns, so everything
+   stacks into one and the page scrolls normally again.
+   ------------------------------------------------------------------------- */
+@media (max-width: 800px) {
+    html,
+    body {
+        height: auto;       /* let the page be as tall as its content... */
+        overflow: auto;     /* ...and scroll the whole page as one */
+    }
+
+    .layout {
+        flex-direction: column;   /* stack the columns instead of side by side */
+        height: auto;
+    }
+
+    .shop-column {
+        width: auto;              /* full width now that it is stacked */
+        overflow-y: visible;      /* no separate scrollbar - the page scrolls */
+        border-left: none;        /* the divider belongs on top now */
+        border-top: 2px solid var(--panel-edge);
+    }
+
+    .stage-column {
+        overflow-y: visible;
+    }
+
+    #stage-slot {
+        min-height: 400px;        /* flex:1 has nothing to fill now, so give
+                                     the arena an explicit height */
+    }
 }
