@@ -50,6 +50,8 @@ body {
     margin: 0;              /* remove the browser's default gap around the page */
     overflow: hidden;       /* the PAGE itself never scrolls. Each column
                                scrolls on its own instead - see below. */
+    touch-action: manipulation; /* Prevents "double tap to zoom" on phones, 
+                                along with a lot of other web browser specific features*/
 }
 
 /* The two-column container.
