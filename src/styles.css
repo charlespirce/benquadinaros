@@ -70,15 +70,6 @@ body {
     cursor: pointer;         /* show the hand cursor, hinting "this is clickable" */
 }
 
-/* The container holding every buy button. */
-#shop-slot {
-    display: flex;              /* flexbox: lay the children out in a line */
-    flex-direction: column;     /* stack them vertically instead of side by side */
-    align-items: center;        /* centre them horizontally */
-    gap: 12px;                  /* space BETWEEN buttons, with none at the ends */
-    margin-top: 20px;
-}
-
 /* Every buy button: the upgrades and the skin button.
    Created by Generator.build() and SkinButton.build(). */
 .shop-button {
@@ -122,4 +113,21 @@ body {
     font-size: 16px;
     padding: 6px 16px;
     cursor: pointer;
+}
+
+/* Headings above each shop section ("Click Power" / "Generators"). */
+.shop-heading {
+    margin: 28px 0 4px;     /* 28px above, 4px below, 0 left/right */
+    font-size: 20px;
+    letter-spacing: 1px;    /* slightly spaced out, so it reads as a label */
+}
+
+/* The click-power shop. Same layout rules as the generator shop, so both
+   selectors share one block rather than duplicating the properties. */
+#click-shop-slot,
+#shop-slot {
+    display: flex;              /* flexbox: lay the children out in a line */
+    flex-direction: column;     /* stack them vertically */
+    align-items: center;        /* centre them horizontally */
+    gap: 12px;                  /* space BETWEEN buttons */
 }

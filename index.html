@@ -45,9 +45,19 @@
          slot() function will throw a clear error if they disagree. -->
 
     <div id="clock-slot"></div>      <!-- Clock writes the time here -->
-    <div id="readout-slot"></div>    <!-- "Total Clicks" and "Rate" lines -->
+    <div id="readout-slot"></div>    <!-- "Total Clicks", "Per Click", "Rate" -->
     <div id="stage-slot"></div>      <!-- the podrace background + Ben image -->
-    <div id="shop-slot"></div>       <!-- every buy button, added in order -->
+
+    <!-- The two shop sections. The <h2> headings are static text, so they
+         stay in the HTML; the buttons underneath are built by main.js.
+         Adding a new upgrade to an existing section needs no change here -
+         only adding a whole new SECTION would. -->
+    <h2 class="shop-heading">Click Power</h2>
+    <div id="click-shop-slot"></div>   <!-- CLICK_UPGRADES + the skin button -->
+
+    <h2 class="shop-heading">Generators</h2>
+    <div id="shop-slot"></div>         <!-- GENERATORS (passive income) -->
+
     <div id="controls-slot"></div>   <!-- the reset button -->
 
 </body>

@@ -30,7 +30,7 @@ const ASSETS = "assets/";   // folder prefix, so paths are written once
 // Difference from Python: keys are written WITHOUT quotes, and you read
 // them with a dot (CONFIG.tickMs) instead of brackets (CONFIG["tickMs"]).
 const CONFIG = {
-    clickPower: 1,                 // how many clicks you earn per click on Ben
+    baseClickPower: 1,             // clicks per click BEFORE any upgrades
     tickMs: 1000,                  // milliseconds between passive-income payouts
     clickSound: ASSETS + "mixkit-mouse-click-close-1113.wav",   // "+" joins strings
     music: ASSETS + "backgroundmusic.wav",
@@ -41,7 +41,8 @@ const CONFIG = {
         clock: "clock-slot",           // where the wall clock goes
         readouts: "readout-slot",      // where "Total Clicks" / "Rate" go
         stage: "stage-slot",           // where the big Ben image goes
-        shop: "shop-slot",             // where all the buy-buttons go
+        clickShop: "click-shop-slot",  // where CLICK POWER upgrades go
+        shop: "shop-slot",             // where GENERATORS (passive income) go
         controls: "controls-slot",     // where the reset button goes
     },
 };
@@ -92,12 +93,103 @@ const GENERATORS = [
     },
 ];
 
+/*
+ * CLICK_UPGRADES: things you buy to make each manual click worth more.
+ *
+ * This is the exact same shape as GENERATORS above, but the two numbers
+ * mean something different:
+ *
+ *   power      = flat clicks added to EVERY click, per one owned
+ *   multiplier = extra fraction added to your TOTAL click power, per one
+ *                owned (0.25 means "+25% each")
+ *
+ * GENERATORS earn while you do nothing. CLICK_UPGRADES only pay off when
+ * you actually click. Same as GENERATORS, adding an entry here is all you
+ * need to do - the button builds itself.
+ */
+const CLICK_UPGRADES = [
+    {
+        key: "gasgano",
+        name: "Gasgano",
+        icon: ASSETS + "gasgano.jpeg",
+        baseCost: 50,
+        costGrowth: 1.25,
+        power: 1,                    // +1 per click, each
+        multiplier: 0,               // no percentage bonus
+        storage: { owned: "gasgano-owned", cost: "gasgano-cost" },
+    },
+    {
+        key: "wansandage",
+        name: "Wan Sandage",
+        icon: ASSETS + "wansandage.png",
+        baseCost: 2500,
+        costGrowth: 1.4,
+        power: 0,                    // adds nothing on its own...
+        multiplier: 0.25,            // ...but makes every click 25% stronger
+        storage: { owned: "wansandage-owned", cost: "wansandage-cost" },
+    },
+];
+
 // The two skins the big Ben image can wear.
 // This is an object used as a lookup table: SKINS["ben"] gives the first one.
+// `clickBonus` is flat click power granted WHILE THAT SKIN IS WORN.
+// PolyBen has four arms, so he clicks harder - which turns the skin
+// toggle from pure decoration into a real choice.
 const SKINS = {
-    ben: { img: ASSETS + "ben.png", label: "Ben" },
-    polyben: { img: ASSETS + "benquad.png", label: "PolyBen" },
+    ben: { img: ASSETS + "ben.png", label: "Ben", clickBonus: 0 },
+    polyben: { img: ASSETS + "benquad.png", label: "PolyBen", clickBonus: 3 },
 };
+
+// Builds the little " (+3/click)" note shown on the skin button.
+// Returns an empty string for a skin with no bonus, so nothing is shown.
+function skinBonusText(skinKey) {
+    const bonus = SKINS[skinKey].clickBonus;
+    return bonus > 0 ? ` (+${bonus}/click)` : "";
+}
+
+
+/**
+ * Safety check, run once at startup.
+ *
+ * Every upgrade's `key` becomes an HTML id, and its `storage` names become
+ * save-file keys. If two upgrades share either one, you get a duplicate id
+ * (invalid HTML) or, much worse, two upgrades silently overwriting each
+ * other's saved numbers.
+ *
+ * That is a nasty bug to track down, so this turns it into a loud error at
+ * startup instead. It costs nothing and only ever runs once.
+ */
+function checkForDuplicateKeys() {
+    // Combine both lists into one, since a clash ACROSS the two lists is
+    // just as broken as a clash within one.
+    const all = [...GENERATORS, ...CLICK_UPGRADES];
+
+    // A Set stores unique values and tells you if it has seen one before.
+    // Same idea as a Python set.
+    const seen = new Set();
+
+    for (const def of all) {
+        // Check all three names this upgrade claims. The "key:" / "owned:"
+        // prefixes keep the three kinds separate, so a `key` named "rat"
+        // does not falsely clash with a storage key named "rat".
+        const claimed = [
+            `key:${def.key}`,
+            `owned:${def.storage.owned}`,
+            `cost:${def.storage.cost}`,
+        ];
+
+        for (const name of claimed) {
+            if (seen.has(name)) {
+                throw new Error(
+                    `Duplicate upgrade name "${name}" on "${def.name}". ` +
+                    `Every key and storage name must be unique across ` +
+                    `GENERATORS and CLICK_UPGRADES.`
+                );
+            }
+            seen.add(name);
+        }
+    }
+}
 
 
 /* =========================================================================
@@ -394,20 +486,29 @@ class ClickTarget extends GameButton {
 }
 
 /**
- * Generator: a buyable upgrade that earns clicks and/or boosts your rate.
- * One of these is created for every entry in the GENERATORS list.
+ * Upgrade: the shared behaviour of ANYTHING you buy repeatedly.
+ *
+ * Both kinds of upgrade in this game work identically when it comes to
+ * buying: check you can afford it, take the clicks, add one to the count,
+ * raise the price, save. The only thing that differs is WHAT the purchase
+ * actually does for you.
+ *
+ * So all of that shared work lives here once, and the two subclasses below
+ * add nothing but their own contribution getters. This is the main reason
+ * to use inheritance: write the common part a single time.
+ *
+ * Nothing ever creates an Upgrade directly - only Generator and
+ * ClickUpgrade, which extend it. Python would call this a base class.
  */
-class Generator extends GameButton {
-    // `def` here is one entry from the GENERATORS list.
+class Upgrade extends GameButton {
+    // `def` is one entry from GENERATORS or CLICK_UPGRADES.
     constructor(game, def) {
         super(game);
 
-        // Copy the settings out of the config onto this object.
+        // The fields every upgrade has, whatever it does.
         this.key = def.key;
         this.name = def.name;
         this.icon = def.icon;
-        this.rate = def.rate;
-        this.boost = def.boost;
         this.costGrowth = def.costGrowth;
         this.storage = def.storage;
 
@@ -446,17 +547,6 @@ class Generator extends GameButton {
         this.save();                                          // write to the save file
     }
 
-    // `get` makes a GETTER: a method you read like a plain property.
-    // You write `generator.flatRate`, with NO parentheses.
-    // This is exactly Python's @property.
-    get flatRate() {
-        return this.rate * this.owned;   // flat clicks/sec from this upgrade
-    }
-
-    get rateBoost() {
-        return this.boost * this.owned;  // percentage bonus from this upgrade
-    }
-
     save() {
         Save.set(this.storage.owned, this.owned);
         Save.set(this.storage.cost, this.cost);
@@ -470,6 +560,57 @@ class Generator extends GameButton {
         // condition is true and removes it when false. The styling itself
         // lives in styles.css - this line only decides whether it applies.
         this.element.classList.toggle("affordable", this.game.clicks >= this.cost);
+    }
+}
+
+/**
+ * Generator: an upgrade that earns you clicks automatically, every second.
+ * One of these is created for every entry in the GENERATORS list.
+ *
+ * Notice how short this class is. Everything about buying it, drawing it
+ * and saving it was inherited from Upgrade. All it adds is "here is what
+ * I contribute to your income".
+ */
+class Generator extends Upgrade {
+    constructor(game, def) {
+        super(game, def);       // let Upgrade do all the shared setup first
+        this.rate = def.rate;   // then keep the two numbers only WE care about
+        this.boost = def.boost;
+    }
+
+    // `get` makes a GETTER: a method you read like a plain property.
+    // You write `generator.flatRate`, with NO parentheses.
+    // This is exactly Python's @property.
+    get flatRate() {
+        return this.rate * this.owned;   // flat clicks/sec from this upgrade
+    }
+
+    get rateBoost() {
+        return this.boost * this.owned;  // percentage bonus from this upgrade
+    }
+}
+
+/**
+ * ClickUpgrade: an upgrade that makes each manual click worth more.
+ * One of these is created for every entry in the CLICK_UPGRADES list.
+ *
+ * Structurally this is the mirror image of Generator - same parent, same
+ * amount of new code, just a different pair of getters. Game.clickPower
+ * adds these up the same way Game.rate adds up the generators.
+ */
+class ClickUpgrade extends Upgrade {
+    constructor(game, def) {
+        super(game, def);
+        this.power = def.power;            // flat clicks added per click
+        this.multiplier = def.multiplier;  // percentage added to click power
+    }
+
+    get flatPower() {
+        return this.power * this.owned;
+    }
+
+    get powerMultiplier() {
+        return this.multiplier * this.owned;
     }
 }
 
@@ -519,7 +660,8 @@ class SkinButton extends GameButton {
         // While locked, show the price.
         if (!this.unlocked) {
             this.label.textContent =
-                `Unlock ${SKINS[this.skinKey].label} - Cost: ${this.unlockCost}`;
+                `Unlock ${SKINS[this.skinKey].label}` +
+                `${skinBonusText(this.skinKey)} - Cost: ${this.unlockCost}`;
             this.icon.src = SKINS[this.skinKey].img;
             this.element.classList.toggle(
                 "affordable", this.game.clicks >= this.unlockCost
@@ -530,7 +672,9 @@ class SkinButton extends GameButton {
         // Once unlocked, show the skin you would switch TO, not the one
         // you are currently wearing.
         const other = this.game.benButton.skin === "ben" ? this.skinKey : "ben";
-        this.label.textContent = `Switch to ${SKINS[other].label}`;
+        // Includes the bonus, so you can see what the swap is worth.
+        this.label.textContent =
+            `Switch to ${SKINS[other].label}${skinBonusText(other)}`;
         this.icon.src = SKINS[other].img;
         this.element.classList.add("affordable");   // always usable now, so
                                                     // never show it dimmed
@@ -618,7 +762,9 @@ class MusicPlayer {
  */
 class Game {
     constructor() {
-        this.clickPower = CONFIG.clickPower;           // clicks earned per click
+        // NOTE: there is no `this.clickPower = ...` here any more.
+        // Click power is now a GETTER further down, recalculated from your
+        // upgrades and current skin every time it is read.
         this.clickSound = new Sound(CONFIG.clickSound);
         this.clicks = Save.number("totalClicks", 0);   // your score, from the save
 
@@ -630,6 +776,11 @@ class Game {
         // .map() makes a NEW array by running a function on every item.
         // It is Python's [Generator(self, d) for d in GENERATORS].
         this.generators = GENERATORS.map((def) => new Generator(this, def));
+
+        // Exactly the same pattern for the click-power upgrades.
+        this.clickUpgrades = CLICK_UPGRADES.map(
+            (def) => new ClickUpgrade(this, def)
+        );
 
         this.skinButton = new SkinButton(this, {
             unlockCost: 1000,
@@ -643,6 +794,7 @@ class Game {
             // Each Readout gets a function that fetches its current value.
             // `() => this.clicks` means "when asked, look up clicks NOW".
             new Readout(this, "Total Clicks", () => this.clicks),
+            new Readout(this, "Per Click", () => this.clickPower),
             new Readout(this, "Rate", () => this.rate),
         ];
 
@@ -651,7 +803,8 @@ class Game {
         // this one, exactly like Python's `[a, *generators, b]`.
         this.widgets = [
             this.benButton,
-            ...this.generators,   // unpacked, so we get a flat list
+            ...this.generators,     // unpacked, so we get a flat list
+            ...this.clickUpgrades,  // same again for the click upgrades
             this.skinButton,
             ...this.readouts,
         ];
@@ -679,13 +832,45 @@ class Game {
 
         this.benButton.mount(this.slot("stage"));
 
+        // Click-power upgrades go in their own section, above the
+        // generators. The skin button sits with them because PolyBen is
+        // really just another source of click power.
+        const clickShop = this.slot("clickShop");
+        this.clickUpgrades.forEach((upgrade) => upgrade.mount(clickShop));
+        this.skinButton.mount(clickShop);
+
         const shop = this.slot("shop");   // looked up once, reused below
         this.generators.forEach((generator) => generator.mount(shop));
-        this.skinButton.mount(shop);
 
         // Created and mounted in one line - nothing needs to refer to the
         // reset button again afterwards, so it does not need a name.
         new ResetButton(this).mount(this.slot("controls"));
+    }
+
+    // How much ONE manual click on Ben is worth right now.
+    //
+    // A getter, so it is recalculated from scratch every time - which is
+    // why buying an upgrade or switching skin takes effect instantly with
+    // no extra bookkeeping anywhere.
+    //
+    // The sum works the same way as rate() below: add up all the flat
+    // bonuses first, then apply the percentage bonuses to that total.
+    get clickPower() {
+        // Flat "+N per click" from upgrades like Mawhonic and Gasgano.
+        const flat = this.clickUpgrades.reduce((sum, u) => sum + u.flatPower, 0);
+
+        // Percentage bonuses from upgrades like Wan Sandage.
+        const mult = this.clickUpgrades.reduce(
+            (sum, u) => sum + u.powerMultiplier, 0
+        );
+
+        // Flat bonus from whichever skin you are currently wearing.
+        // Wearing PolyBen gives +3; wearing plain Ben gives +0.
+        const skinBonus = SKINS[this.benButton.skin].clickBonus;
+
+        // e.g. base 1 + 2 Mawhonic + PolyBen = 6, with one Wan Sandage
+        //      -> 6 * 1.25 = 7 clicks per click
+        return Math.floor((CONFIG.baseClickPower + flat + skinBonus) * (1 + mult));
     }
 
     // Your total clicks per second. A getter, so `game.rate` recalculates
@@ -753,6 +938,8 @@ class Game {
    `defer` attribute, which guarantees the page's HTML is fully parsed
    before any of this code runs.
    ========================================================================= */
+
+checkForDuplicateKeys();   // fail loudly now if two upgrades clash
 
 const game = new Game();   // create the game (loads the save, makes widgets)
 game.start();              // build the page and start the clock ticking
