@@ -194,7 +194,8 @@ body {
    rule rather than duplicating the properties. A comma between selectors
    means "apply this to either of these". */
 #click-shop-slot,
-#shop-slot {
+#shop-slot,
+#skin-shop-slot {
     display: flex;              /* flexbox: lay the children out in a line */
     flex-direction: column;     /* stack them vertically */
     align-items: stretch;       /* make every button the full column width,

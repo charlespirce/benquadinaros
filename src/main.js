@@ -43,6 +43,7 @@ const CONFIG = {
         stage: "stage-slot",           // where the big Ben image goes
         clickShop: "click-shop-slot",  // where CLICK POWER upgrades go
         shop: "shop-slot",             // where GENERATORS (passive income) go
+        skinShop: "skin-shop-slot",     // where the skin buttons go
         controls: "controls-slot",     // where the reset button goes
     },
 };
@@ -911,9 +912,10 @@ class Game {
         // multiplies your passive income rather than your click power.
         const shop = this.slot("shop");   // looked up once, reused below
         this.generators.forEach((generator) => generator.mount(shop));
-        this.skinButton.mount(shop);
-        this.figureSkinButton.mount(shop);
-        this.legoSkinButton.mount(shop);
+        const skinShop = this.slot("skinShop");
+        this.skinButton.mount(skinShop);
+        this.figureSkinButton.mount(skinShop);
+        this.legoSkinButton.mount(skinShop);
 
         // Created and mounted in one line - nothing needs to refer to the
         // reset button again afterwards, so it does not need a name.
