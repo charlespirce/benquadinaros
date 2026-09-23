@@ -110,6 +110,16 @@ const GENERATORS = [
         rate: 100,
         boost:0,
         storage: { owned: "sebulba-owned", cost: "sebulba-cost" },   
+    },
+    { // --- sixth upgrade ----
+        key:"aldar_beedo",
+        name:"Aldar Beedo",
+        icon: ASSETS + "aldar_beedo.png",
+        baseCost: 500000,
+        costGrowth: 1.2,
+        rate: 500,
+        boost:0.1,
+        storage: { owned: "aldar_beedo-owned", cost: "aldar_beedo-cost" },   
     }
 ];
 
