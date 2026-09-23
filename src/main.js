@@ -157,6 +157,16 @@ const CLICK_UPGRADES = [
         power: 5,
         multiplier: 0,
         storage: { owned: "ebe_e_endocott-owned", cost: "ebe_e_endocott-cost" },
+    },
+    {
+        key:"dud_bolt",
+        name:"Dud Bolt",
+        icon: ASSETS + "Dud_Bolt.png",
+        baseCost: 10000,
+        costGrowth: 1.4,
+        power: 15,
+        multiplier: 0.05,
+        storage: { owned: "dud_bolt-owned", cost: "dud_bolt-cost" },
     }
 ];
 
