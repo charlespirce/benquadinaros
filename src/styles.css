@@ -196,7 +196,8 @@ body {
    means "apply this to either of these". */
 #click-shop-slot,
 #shop-slot,
-#skin-shop-slot {
+#skin-shop-slot,
+#minigames-slot {
     display: flex;              /* flexbox: lay the children out in a line */
     flex-direction: column;     /* stack them vertically */
     align-items: stretch;       /* make every button the full column width,

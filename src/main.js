@@ -45,6 +45,7 @@ const CONFIG = {
         shop: "shop-slot",             // where GENERATORS (passive income) go
         skinShop: "skin-shop-slot",     // where the skin buttons go
         controls: "controls-slot",     // where the reset button goes
+        minigames: "minigames-slot",   // where the minigame buttons go
     },
 };
 
@@ -178,6 +179,17 @@ const CLICK_UPGRADES = [
         power: 15,
         multiplier: 0.05,
         storage: { owned: "dud_bolt-owned", cost: "dud_bolt-cost" },
+    }
+];
+
+// Future minigame buttons can be added here as objects in the same pattern.
+// Starting empty means the section exists and is ready without breaking the page.
+const MINIGAME_BUTTONS = [
+    {
+        key: "ben_pong",
+        name: "Ben Pong",
+        icon: ASSETS + "ben.png",
+        cost: 10000,
     }
 ];
 
@@ -740,6 +752,43 @@ class SkinButton extends GameButton {
 }
 
 /**
+ * MinigameButton: a generic shop button for the future Minigames section.
+ * Named this way so new entries can be added by extending the same pattern
+ * used by the upgrade and skin buttons without duplicating the DOM logic.
+ */
+class MinigameButton extends GameButton {
+    constructor(game, def = {}) {
+        super(game);
+        this.key = def.key || "minigame";
+        this.name = def.name || "Minigame";
+        this.icon = def.icon || "";
+        this.cost = def.baseCost || 0;
+    }
+
+    build() {
+        this.iconNode = el("img", {
+            class: "icon",
+            src: this.icon,
+            alt: this.name,
+        });
+        this.label = el("span", { text: this.name });
+
+        return el("button", { class: "shop-button", id: `${this.key}_button` }, [
+            this.iconNode,
+            this.label,
+        ]);
+    }
+
+    onClick() {
+        // Reserved for future minigame logic; no-op for now.
+    }
+
+    render() {
+        this.element.classList.toggle("affordable", this.game.clicks >= this.cost);
+    }
+}
+
+/**
  * ResetButton: sets your clicks back to zero. Upgrades are kept.
  */
 class ResetButton extends GameButton {
@@ -855,7 +904,9 @@ class Game {
             skinKey: "legoben",
             storageKey: "legoben_unlocked",
         });
-
+        this.minigameButtons = MINIGAME_BUTTONS.map(
+            (def) => new MinigameButton(this, def)
+        );
 
         this.clock = new Clock(this);
 
@@ -877,6 +928,7 @@ class Game {
             this.skinButton,
             this.figureSkinButton,
             this.legoSkinButton,
+            ...this.minigameButtons,
             ...this.readouts,
         ];
     }
@@ -916,6 +968,9 @@ class Game {
         this.skinButton.mount(skinShop);
         this.figureSkinButton.mount(skinShop);
         this.legoSkinButton.mount(skinShop);
+
+        const minigameSlot = this.slot("minigames");
+        this.minigameButtons.forEach((button) => button.mount(minigameSlot));
 
         // Created and mounted in one line - nothing needs to refer to the
         // reset button again afterwards, so it does not need a name.
