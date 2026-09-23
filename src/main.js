@@ -190,6 +190,18 @@ const MINIGAME_BUTTONS = [
         name: "Ben Pong",
         icon: ASSETS + "ben.png",
         cost: 10000,
+    },
+    {
+        key: "ben_brick_breaker",
+        name: "Ben Brick Breaker",
+        icon: ASSETS + "ben.png",
+        cost: 25000,
+    },
+    {
+        key: "ben_quadinaros_podracing",
+        name: "Ben Quadinaros Podracing",
+        icon: ASSETS + "ben.png",
+        cost: 50000,
     }
 ];
 
