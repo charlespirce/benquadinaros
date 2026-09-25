@@ -2,8 +2,8 @@
 const logo = document.getElementById("test-img");
 
 // Starting positions
-let x = Math.random() * (window.innerWidth - 150);
-let y = Math.random() * (window.innerHeight - 100);
+let x = Math.random() * (window.innerWidth/2);
+let y = Math.random() * (window.innerHeight/2);
 
 // Speed/Direction vectors (Pixels moved per frame)
 let xSpeed = 3; 
@@ -60,4 +60,22 @@ if (logo.complete) {
 window.addEventListener('resize', () => {
   if (x + logo.clientWidth > window.innerWidth) x = window.innerWidth - logo.clientWidth;
   if (y + logo.clientHeight > window.innerHeight) y = window.innerHeight - logo.clientHeight;
+});
+
+const hoverDuration = 400;
+let hoverTimer;
+
+function changeSpeed() {
+  xSpeed = Math.random() * 7;
+  ySpeed = Math.random() * 7;
+}
+
+logo.addEventListener('click', changeSpeed);
+
+logo.addEventListener('mouseenter', () => {
+  hoverTimer = setTimeout(changeSpeed, hoverDuration);
+});
+
+logo.addEventListener('mouseleave', () => {
+  clearTimeout(hoverTimer);
 });
