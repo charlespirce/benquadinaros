@@ -792,7 +792,7 @@ class MinigameButton extends GameButton {
     }
 
     onClick() {
-        // Reserved for future minigame logic; no-op for now.
+        if (this.key === "ben_pong") window.location.href = "pong.html";
     }
 
     render() {

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ben Pong</title>
+    <link rel="stylesheet" href="pong.css">
+</head>
+<body>
+    <main class="pong-page">
+        <header class="pong-header">
+            <a class="back-link" href="index.html">Back to clicker</a>
+            <div>
+                <h1>FIGHT EVIL BEN</h1>
+            </div>
+            <button id="restart-pong" class="restart-button" type="button">Restart</button>
+        </header>
+
+        <section class="scoreboard" aria-label="Pong score">
+            <div><span class="score-label">YOU</span><strong id="player-score">0</strong></div>
+            <p id="pong-status">First to 7</p>
+            <div><span class="score-label">Evil Ben</span><strong id="cpu-score">0</strong></div>
+        </section>
+
+        <section class="pong-arena" aria-label="Pong game">
+            <div class="center-line" aria-hidden="true"></div>
+            <img id="player-paddle" class="pong-ben paddle" src="assets/bt310_quadra.png" alt="Your Ben paddle">
+            <img id="cpu-paddle" class="pong-ben paddle" src="assets/evil_ben.png" alt="CPU Ben paddle">
+            <img id="pong-ball" class="pong-ben ball" src="assets/gold_ben.png" alt="Ben Pong ball">
+        </section>
+
+        <p class="controls">Move with <kbd>W</kbd>/<kbd>S</kbd>, arrow keys, or your mouse. Press <kbd>Space</kbd> to pause.</p>
+    </main>
+    <script src="pong.js"></script>
+</body>
+</html>

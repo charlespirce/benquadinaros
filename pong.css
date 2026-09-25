@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap');
+
+:root {
+    --ink: #16222a;
+    --cream:rgb(5, 172, 238) ;
+    --coral: rgb(5, 172, 238);
+    --mint: #9be1c7;
+    --yellow: #f5c84b;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    color: var(--ink);
+    background: var(--cream);
+    background: url("assets/podrace.png") center / cover no-repeat;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.pong-page {
+    width: min(1100px, 100%);
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 28px clamp(18px, 4vw, 56px) 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.pong-header,
+.scoreboard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.pong-header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    padding: 0 10px;
+}
+
+.pong-header > div {
+    grid-column: 2;
+}
+
+.pong-header .restart-button {
+    justify-self: end;
+}
+
+.back-link,
+.restart-button {
+    color: var(--ink);
+    font: 500 13px 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.back-link { 
+    text-decoration-thickness: 2px; 
+    text-underline-offset: 4px; 
+    border: 2px solid var(--ink);
+    background: var(--yellow);
+    padding: 11px 14px;
+    justify-self: start;
+}
+.back-link:hover { background: var(--mint); }
+
+
+h1 {
+    margin: 0;
+    font-size: clamp(30px, 6vw, 64px);
+    line-height: .9;
+    text-align: center;
+    letter-spacing: .02em;
+    border: 2px solid var(--ink);
+    background: var(--yellow);
+}
+
+.restart-button {
+    padding: 11px 14px;
+    border: 2px solid var(--ink);
+    border-radius: 3px;
+    background: var(--yellow);
+    cursor: pointer;
+}
+
+.restart-button:hover { background: var(--mint); }
+
+.scoreboard {
+    max-width: 520px;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    border: 3px solid var(--ink);
+    background: var(--yellow);
+}
+
+.scoreboard > div { display: grid; gap: 2px; min-width: 90px; }
+.score-label { font: 500 12px 'DM Mono', monospace; letter-spacing: .12em; }
+.scoreboard strong { font-size: 42px; line-height: 1; }
+.scoreboard p { margin: 0; font: 500 13px 'DM Mono', monospace; text-transform: uppercase; }
+
+.pong-arena {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    min-height: min(62vh, 600px);
+    overflow: hidden;
+    border: 3px solid var(--ink);
+    border-radius: 4px;
+    background: url("assets/sand.jpeg") center / cover no-repeat;
+    box-shadow: 10px 10px 0 var(--ink);
+    touch-action: none;
+}
+
+.center-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    border-left: 3px dashed rgba(247, 242, 232, .75);
+}
+
+.pong-ben {
+    position: absolute;
+    left: 0;
+    top: 0;
+    object-fit: contain;
+    user-select: none;
+    pointer-events: none;
+}
+
+.paddle { width: clamp(52px, 8vw, 86px); height: clamp(110px, 20vh, 170px); }
+#player-paddle { left: 0; }
+#cpu-paddle { left: auto; right: 0; }
+.ball { width: clamp(42px, 6vw, 64px); height: clamp(42px, 6vw, 64px); }
+
+.controls {
+    margin: 0;
+    color: rgba(22, 34, 42, .78);
+    font: 400 12px 'DM Mono', monospace;
+    text-align: center;
+    border: 2px solid var(--ink);
+    background: var(--yellow);
+    padding: 8px 12px;
+}
+
+kbd {
+    padding: 3px 6px;
+    border: 1px solid var(--ink);
+    border-radius: 2px;
+    background: var(--mint);
+    font: inherit;
+}
+
+@media (max-width: 600px) {
+    .pong-page { padding-top: 18px; gap: 14px; }
+    .pong-header { align-items: center; }
+    .back-link { max-width: 20px;  }
+    .restart-button { padding: 9px 8px; }
+    .pong-arena { min-height: 60vh; box-shadow: 6px 6px 0 var(--ink); }
+    .controls { line-height: 1.8; }
+}
