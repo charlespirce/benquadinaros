@@ -54,6 +54,14 @@ body {
                                 along with a lot of other web browser specific features*/
 }
 
+#test-img {
+    position: fixed;
+    width: 120px;
+    height: auto;
+    z-index: 10;
+    pointer-events: none;
+}
+
 /* The two-column container.
    `display: flex` lays its children out in a row by default, so the two
    columns sit side by side automatically. */
