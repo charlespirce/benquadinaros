@@ -15,7 +15,7 @@ body {
     margin: 0;
     color: var(--ink);
     background: var(--cream);
-    background: url("assets/podrace.png") center / cover no-repeat;
+    background: url("../../assets/podrace.png") center / cover no-repeat;
     font-family: 'Space Grotesk', sans-serif;
 }
 
@@ -112,7 +112,7 @@ h1 {
     overflow: hidden;
     border: 3px solid var(--ink);
     border-radius: 4px;
-    background: url("assets/sand.jpeg") center / cover no-repeat;
+    background: url("../../assets/sand.jpeg") center / cover no-repeat;
     box-shadow: 10px 10px 0 var(--ink);
     touch-action: none;
 }

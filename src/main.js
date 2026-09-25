@@ -25,6 +25,7 @@
 // Note: `const` only locks the NAME. The contents of an object or array
 // with a const name can still be changed. It is not "frozen".
 const ASSETS = "assets/";   // folder prefix, so paths are written once
+const MINI = "minigames/";  // folder prefix for minigames
 
 // An object literal: `{ key: value }`. This is JS's version of a dict.
 // Difference from Python: keys are written WITHOUT quotes, and you read
@@ -792,7 +793,7 @@ class MinigameButton extends GameButton {
     }
 
     onClick() {
-        if (this.key === "ben_pong") window.location.href = "pong.html";
+        if (this.key === "ben_pong") window.location.href = MINI + "pong/pong.html";
     }
 
     render() {
