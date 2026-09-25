@@ -66,7 +66,7 @@ const hoverDuration = 400;
 let hoverTimer;
 
 function changeSpeed() {
-    const rand_theta = (Math.random()*2*Math.PI) 
+    var rand_theta = (Math.random()*2*Math.PI) 
   xSpeed = 7*Math.cos(rand_theta);
   ySpeed = 7*Math.sin(rand_theta);
 }
