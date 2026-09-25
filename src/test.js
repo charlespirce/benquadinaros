@@ -66,8 +66,8 @@ const hoverDuration = 400;
 let hoverTimer;
 
 function changeSpeed() {
-  xSpeed = Math.random() * 7;
-  ySpeed = Math.random() * 7;
+  xSpeed = ( Math.random() - 0.5 )*2 * 7;
+  ySpeed = ( Math.random() - 0.5 )*2 * 7;
 }
 
 logo.addEventListener('click', changeSpeed);
