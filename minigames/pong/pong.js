@@ -6,6 +6,13 @@ const playerScoreLabel = document.querySelector("#player-score");
 const cpuScoreLabel = document.querySelector("#cpu-score");
 const statusLabel = document.querySelector("#pong-status");
 const restartButton = document.querySelector("#restart-pong");
+const music = new Audio("../../assets/PongSong.mp3");
+
+music.loop = true;
+music.volume = 0.5;
+music.play().catch(() => {
+	// Browsers block autoplay until the user interacts with the page.
+});
 
 const game = {
 	width: 0,
