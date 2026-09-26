@@ -123,6 +123,16 @@ const GENERATORS = [
         rate: 500,
         boost:0.1,
         storage: { owned: "aldar_beedo-owned", cost: "aldar_beedo-cost" },   
+    },
+    { // --- seventh upgrade ----
+        key:"teemto_pagalies",
+        name:"Teemto Pagalies",
+        icon: ASSETS + "teemto_pagalies.png",
+        baseCost: 1000000,
+        costGrowth: 1.2,
+        rate: 1000,
+        boost:0.2,
+        storage: { owned: "teemto_pagalies-owned", cost: "teemto_pagalies-cost" },   
     }
 ];
 
