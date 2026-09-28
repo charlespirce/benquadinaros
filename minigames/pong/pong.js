@@ -7,6 +7,7 @@ const cpuScoreLabel = document.querySelector("#cpu-score");
 const statusLabel = document.querySelector("#pong-status");
 const restartButton = document.querySelector("#restart-pong");
 const music = new Audio("../../assets/PongSong.mp3");
+let clicks = Number(localStorage.getItem("totalClicks")) || 0;
 
 music.loop = true;
 music.volume = 0.5;
@@ -124,6 +125,8 @@ function scorePoint(direction) {
 	if (game.playerScore >= 3 || game.cpuScore >= 3) {
 		game.paused = true;
 		statusLabel.textContent = game.playerScore > game.cpuScore ? "You win" : "Evil Ben wins";
+		clicks = game.playerScore > game.cpuScore ? (clicks * 1.5) : (clicks * 0.5);
+		localStorage.setItem("totalClicks", clicks);
 		return;
 	}
 	resetBall(direction);
