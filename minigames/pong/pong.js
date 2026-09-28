@@ -125,7 +125,7 @@ function scorePoint(direction) {
 	if (game.playerScore >= 3 || game.cpuScore >= 3) {
 		game.paused = true;
 		statusLabel.textContent = game.playerScore > game.cpuScore ? "You win" : "Evil Ben wins";
-		clicks = game.playerScore > game.cpuScore ? (clicks * 1.5) : (clicks * 0.5);
+		clicks = game.playerScore > game.cpuScore ? Math.floor((clicks * 1.5)) : Math.floor((clicks * 0.5));
 		localStorage.setItem("totalClicks", clicks);
 		return;
 	}
