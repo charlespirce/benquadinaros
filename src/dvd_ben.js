@@ -1,5 +1,8 @@
 //game test thing, make dvd type image bounce around
 const logo = document.getElementById("test-img");
+let clicks = Number(localStorage.getItem("totalClicks")) || 0;
+let clickPower = Number(localStorage.getItem("clickPower")) || 1;
+
 
 // Starting positions
 let x = Math.random() * (window.innerWidth/2);
@@ -71,8 +74,11 @@ function changeSpeed() {
   ySpeed = 7*Math.sin(rand_theta);
 }
 
-logo.addEventListener('click', changeSpeed);
-
+logo.addEventListener('click', () => {
+  changeSpeed();
+  clicks = clicks + (2*clickPower);
+  localStorage.setItem("totalClicks", clicks);
+});
 logo.addEventListener('mouseenter', () => {
   hoverTimer = setTimeout(changeSpeed, hoverDuration);
 });
