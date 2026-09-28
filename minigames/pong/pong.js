@@ -150,8 +150,8 @@ function frame(now) {
 
 window.addEventListener("keydown", (event) => {
 	const key = event.key.toLowerCase();
-	if (["w", "s", "arrowup", "arrowdown", " "].includes(key)) event.preventDefault();
-	if (key === " ") game.paused = !game.paused;
+	if (["w", "s", "arrowup", "arrowdown"].includes(key)) event.preventDefault();
+	
 	game.keys.add(key);
 });
 
