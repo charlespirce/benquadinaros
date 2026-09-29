@@ -804,8 +804,9 @@ class MinigameButton extends GameButton {
 
     onClick() {
         if (this.key === "ben_pong") window.location.href = MINI + "pong/pong.html";
+        if (this.key === "ben_brick_breaker") window.location.href = MINI + "brick_breaker/brick_breaker.html";
+        if (this.key === "ben_quadinaros_podracing") window.location.href = MINI + "podracing/podracing.html";
     }
-
     render() {
         this.element.classList.toggle("affordable", this.game.clicks >= this.cost);
     }
