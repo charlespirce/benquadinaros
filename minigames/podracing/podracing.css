@@ -1,0 +1,15 @@
+:root{
+    --ink: #16222a;
+    --cream:rgb(5, 172, 238) ;
+    --coral: rgb(5, 172, 238);
+    --mint: #9be1c7;
+    --yellow: #f5c84b;
+}
+html, body {
+    min-height: 100vh;
+    margin: 0;
+    color: var(--ink);
+    background: var(--cream);
+    background: url("../../assets/podrace.png") center / cover no-repeat;
+    font-family: 'Space Grotesk', sans-serif;
+}
