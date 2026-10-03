@@ -1,7 +1,6 @@
 :root{
     --ink: #16222a;
-    --cream:rgb(5, 172, 238) ;
-    --coral: rgb(5, 172, 238);
+    --blue:rgb(5, 172, 238) ;
     --mint: #9be1c7;
     --yellow: #f5c84b;
 }
@@ -9,7 +8,23 @@ html, body {
     min-height: 100vh;
     margin: 0;
     color: var(--ink);
-    background: var(--cream);
     background: url("../../assets/podrace.png") center / cover no-repeat;
     font-family: 'Space Grotesk', sans-serif;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 2rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 3rem;
+    color: var(--ink);
+}
+.ben {
+    /* `auto` for both, so the image keeps its natural 399x501 shape and the
+       two max- rules below shrink it proportionally when space is tight. */
+    width: auto;
+    height: auto;
+    max-width: 90%;
+    max-height: 100%;       /* never taller than the arena, so he cannot
+                               overflow and force the column to scroll */
 }
