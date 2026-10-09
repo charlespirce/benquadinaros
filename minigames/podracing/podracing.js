@@ -4,6 +4,8 @@
  const tatooine = document.getElementById("tatooine");
  const podracer = document.getElementById("pod");
  const racer = document.getElementById("ben");
+ const racerShopButton = document.getElementById("racerShopButton");
+ const podShopButton = document.getElementById("podShopButton");
 
  backButton?.addEventListener('click', () => {
         window.location.href = '../../index.html';
@@ -19,6 +21,14 @@ menuButton?.addEventListener('click', () => {
 
 tatooine?.addEventListener('click', () => {
     window.location.href = 'racing.html';
+});
+
+racerShopButton?.addEventListener('click', () => {
+    window.location.href = 'shops/racer_shop.html';
+});
+
+podShopButton?.addEventListener('click', () => {
+    window.location.href = 'shops/pod_shop.html';
 });
 
 const movementKeys = new Set(['arrowleft', 'a', 'arrowright', 'd']);
