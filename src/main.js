@@ -229,6 +229,7 @@ const SKINS = {
     polyben: { img: ASSETS + "benquad.png", label: "PolyBen", rateMultiplier: 1.5 },
     ben_figure: { img: ASSETS + "ben_figure.png", label: "Ben Figure", rateMultiplier: 2 },
     legoben: { img: ASSETS + "lego_ben.png", label: "Lego Ben", rateMultiplier: 2.5 },
+    conceptben: { img: ASSETS + "concept_ben.png", label: "Concept Ben", rateMultiplier: 3 },
 };
 
 // Builds the little " (1.5x rate)" note shown on the skin button.
@@ -928,6 +929,11 @@ class Game {
             skinKey: "legoben",
             storageKey: "legoben_unlocked",
         });
+        this.conceptSkinButton = new SkinButton(this, {
+            unlockCost: 100000000,
+            skinKey: "conceptben",
+            storageKey: "conceptben_unlocked",
+        });
         this.minigameButtons = MINIGAME_BUTTONS.map(
             (def) => new MinigameButton(this, def)
         );
@@ -992,7 +998,7 @@ class Game {
         this.skinButton.mount(skinShop);
         this.figureSkinButton.mount(skinShop);
         this.legoSkinButton.mount(skinShop);
-
+        this.conceptSkinButton.mount(skinShop);
         const minigameSlot = this.slot("minigames");
         this.minigameButtons.forEach((button) => button.mount(minigameSlot));
 
