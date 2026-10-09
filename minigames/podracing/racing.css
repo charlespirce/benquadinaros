@@ -19,12 +19,23 @@ h1 {
     font-size: 3rem;
     color: var(--ink);
 }
+.pod {
+    position: fixed;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 18%;
+    height: 25%;
+    max-width: 90vw;
+    max-height: 90vh;
+}
 .ben {
-    /* `auto` for both, so the image keeps its natural 399x501 shape and the
-       two max- rules below shrink it proportionally when space is tight. */
-    width: auto;
-    height: auto;
-    max-width: 90%;
-    max-height: 100%;       /* never taller than the arena, so he cannot
-                               overflow and force the column to scroll */
+    position: fixed;
+    top: 62%;
+    left: 44%;
+    transform: translate(-50%, -50%);
+    width: 2%;
+    height: 6%;
+    max-width: 90vw;
+    max-height: 90vh;
 }
