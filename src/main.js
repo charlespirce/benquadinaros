@@ -968,6 +968,7 @@ class Game {
             this.skinButton,
             this.figureSkinButton,
             this.legoSkinButton,
+            this.conceptSkinButton,
             ...this.minigameButtons,
             ...this.readouts,
         ];
