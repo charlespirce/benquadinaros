@@ -190,6 +190,16 @@ const CLICK_UPGRADES = [
         power: 15,
         multiplier: 0.05,
         storage: { owned: "dud_bolt-owned", cost: "dud_bolt-cost" },
+    },
+    {
+        key:"ody_mandrell",
+        name:"Ody Mandrell",
+        icon: ASSETS + "ody_mandrell.png",
+        baseCost: 25000,
+        costGrowth: 1.4,
+        power: 50,
+        multiplier: 0.1,
+        storage: { owned: "ody_mandrell-owned", cost: "ody_mandrell-cost" },
     }
 ];
 
