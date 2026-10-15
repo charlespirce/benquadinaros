@@ -16,15 +16,26 @@ const normalizeUrl = (path) => new URL(path, window.location.href).href;
 // Podracer images
 const bt310Quadra = normalizeUrl("../../../assets/bt310_quadra.png");
 const ordPedrovia = normalizeUrl("../../../assets/ord_pedrovia.webp");
+const T9B_Wasp = normalizeUrl("../../../assets/9T9-B_wasp.png");
 
 // Racer images
 const benQuadinaros = normalizeUrl("../../../assets/ben.png");
 const rattsTyerell = normalizeUrl("../../../assets/rattstyerell.png");
+const aldarBeedo = normalizeUrl("../../../assets/aldar_beedo.png");
+const odyMandrell = normalizeUrl("../../../assets/ody_mandrell.png");
+const teemtoPagalies = normalizeUrl("../../../assets/teemto_pagalies.png");
+const wanSandage = normalizeUrl("../../../assets/wan_sandage.png");
+const marsGuo = normalizeUrl("../../../assets/mars_guo.png");
+const ebeeEndocott = normalizeUrl("../../../assets/ebe_e_endocott.png");
+const dudBolt = normalizeUrl("../../../assets/Dud_Bolt.png");
+const mawhonic = normalizeUrl("../../../assets/mawhonic.png");
+const gasgano = normalizeUrl("../../../assets/gasgano.png");
+const sebulba = normalizeUrl("../../../assets/sebulba.png");
 
-const podracers = [bt310Quadra, ordPedrovia];
-const podracerLabels = ["BT310-Quadra", "Ord Pedrovia"];
-const racers = [benQuadinaros, rattsTyerell];
-const racerLabels = ["Ben Quadinaros", "Ratts Tyerell"];
+const podracers = [bt310Quadra, ordPedrovia, T9B_Wasp];
+const podracerLabels = ["BT310-Quadra", "Ord Pedrovia", "9T9-B Wasp"];
+const racers = [benQuadinaros, rattsTyerell, aldarBeedo, odyMandrell, teemtoPagalies, wanSandage, marsGuo, ebeeEndocott, dudBolt, mawhonic, gasgano, sebulba];
+const racerLabels = ["Ben Quadinaros", "Ratts Tyerell", "Aldar Beedo", "Ody Mandrell", "Teemto Pagalies", "Wan Sandage", "Mars Guo", "Ebe E. Endocott", "Dud Bolt", "Mawhonic", "Gasgano", "Sebulba"];
 const activeImage = racerImage || podracerImage;
 const activeArray = racerImage ? racers : podracers;
 const activeLabels = racerImage ? racerLabels : podracerLabels;

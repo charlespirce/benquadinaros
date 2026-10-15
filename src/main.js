@@ -87,7 +87,7 @@ const GENERATORS = [
     { // --- third upgrade ----
         key: "mawhonic",
         name: "Mawhonic",
-        icon: ASSETS + "mawhonic.jpeg",
+        icon: ASSETS + "mawhonic.png",
         baseCost: 10000,
         costGrowth: 1.2,
         rate: 10,                                // earns 10 clicks/sec
@@ -154,7 +154,7 @@ const CLICK_UPGRADES = [
     {
         key: "gasgano",
         name: "Gasgano",
-        icon: ASSETS + "gasgano.jpeg",
+        icon: ASSETS + "gasgano.png",
         baseCost: 50,
         costGrowth: 1.25,
         power: 1,                    // +1 per click, each
@@ -164,7 +164,7 @@ const CLICK_UPGRADES = [
     {
         key: "wansandage",
         name: "Wan Sandage",
-        icon: ASSETS + "wansandage.png",
+        icon: ASSETS + "wan_sandage.png",
         baseCost: 2500,
         costGrowth: 1.4,
         power: 0,                    // adds nothing on its own...
@@ -174,7 +174,7 @@ const CLICK_UPGRADES = [
     {
         key:"ebe_e_endocott",
         name:" Ebe E. Endocott",
-        icon: ASSETS + "ebe_e_endocott.jpg",
+        icon: ASSETS + "ebe_e_endocott.png",
         baseCost: 5000,
         costGrowth: 1.4,
         power: 5,
