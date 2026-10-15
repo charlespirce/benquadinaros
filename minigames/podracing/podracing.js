@@ -7,6 +7,16 @@
  const racerShopButton = document.getElementById("racerShopButton");
  const podShopButton = document.getElementById("podShopButton");
 
+ const equippedPodracer = localStorage.getItem("equippedPodracer");
+ if (podracer && equippedPodracer) {
+    podracer.src = equippedPodracer;
+ }
+
+ const equippedRacer = localStorage.getItem("equippedRacer");
+ if (racer && equippedRacer) {
+    racer.src = equippedRacer;
+ }
+
  backButton?.addEventListener('click', () => {
         window.location.href = '../../index.html';
     });

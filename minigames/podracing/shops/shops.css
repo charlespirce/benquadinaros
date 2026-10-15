@@ -45,8 +45,11 @@ h1 {
 .podracer-image, .racer-image {
     display: block;
     margin: 0;
-    max-width: 500px;
-    height: auto;
+    width: 500px;
+    max-width: calc(100vw - 10rem);
+    min-width: 0;
+    height: 320px;
+    object-fit: contain;
 }
 .podracer-label, .racer-label {
     text-align: center;
@@ -65,4 +68,16 @@ h1 {
     font-weight: 600;
     cursor: pointer;
     flex-shrink: 0;
+}
+.equipButton {
+    display: block;
+    margin: 1rem auto;
+    padding: 0.8rem 1.2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background-color: var(--blue);
+    color: var(--ink);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
 }

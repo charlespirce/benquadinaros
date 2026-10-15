@@ -3,6 +3,7 @@ backButton?.addEventListener('click', () => {
     window.location.href = '../podracing_game.html';
 });
 
+const equipButton = document.getElementById("equipButton");
 const previousButton = document.getElementById("previousButton");
 const nextButton = document.getElementById("nextButton");
 const racerImage = document.querySelector(".racer-image");
@@ -24,13 +25,39 @@ const podracers = [bt310Quadra, ordPedrovia];
 const podracerLabels = ["BT310-Quadra", "Ord Pedrovia"];
 const racers = [benQuadinaros, rattsTyerell];
 const racerLabels = ["Ben Quadinaros", "Ratts Tyerell"];
+const activeImage = racerImage || podracerImage;
+const activeArray = racerImage ? racers : podracers;
+const activeLabels = racerImage ? racerLabels : podracerLabels;
+const activeLabelElement = racerImage ? racerLabel : podracerLabel;
+const equipmentKey = racerImage ? "equippedRacer" : "equippedPodracer";
+const equipButtonLabel = racerImage ? "Equip Racer" : "Equip Podracer";
+
+const equippedIndex = activeArray.indexOf(localStorage.getItem(equipmentKey));
+if (activeImage && equippedIndex !== -1) {
+    activeImage.src = activeArray[equippedIndex];
+    activeLabelElement.textContent = activeLabels[equippedIndex];
+}
+
+function updateEquipButton() {
+    if (!equipButton || !activeImage) {
+        return;
+    }
+
+    equipButton.textContent = activeImage.src === localStorage.getItem(equipmentKey)
+        ? "Equipped"
+        : equipButtonLabel;
+}
+
+equipButton?.addEventListener('click', () => {
+    if (!activeImage) {
+        return;
+    }
+
+    localStorage.setItem(equipmentKey, activeImage.src);
+    updateEquipButton();
+});
 
 function updateImageByDirection(direction) {
-    const activeImage = racerImage || podracerImage;
-    const activeArray = racerImage ? racers : podracers;
-    const activeLabels = racerImage ? racerLabels : podracerLabels;
-    const activeLabelElement = racerImage ? racerLabel : podracerLabel;
-
     if (!activeImage || !activeLabelElement) {
         return;
     }
@@ -41,7 +68,10 @@ function updateImageByDirection(direction) {
 
     activeImage.src = activeArray[nextIndex];
     activeLabelElement.textContent = activeLabels[nextIndex] || "";
+    updateEquipButton();
 }
+
+updateEquipButton();
 
 nextButton?.addEventListener('click', () => {
     updateImageByDirection(1);
