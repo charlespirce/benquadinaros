@@ -20,7 +20,7 @@ h1 {
     color: var(--ink);
 }
 .pod {
-    position: fixed;
+    position: absolute;
     top: 70%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -30,7 +30,7 @@ h1 {
     max-height: 90vh;
 }
 .ben {
-    position: fixed;
+    position: absolute;
     top: 62%;
     left: 44%;
     transform: translate(-50%, -50%);
