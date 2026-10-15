@@ -45,3 +45,9 @@ h1 {
     font-size: 2rem;
     color: var(--ink);
 }
+.previousButton{
+    background-color: var(--blue);
+}
+.nextButton{
+    background-color: var(--blue);
+}
