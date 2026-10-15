@@ -31,11 +31,12 @@ const dudBolt = normalizeUrl("../../../assets/Dud_Bolt.png");
 const mawhonic = normalizeUrl("../../../assets/mawhonic.png");
 const gasgano = normalizeUrl("../../../assets/gasgano.png");
 const sebulba = normalizeUrl("../../../assets/sebulba.png");
+const goldBen = normalizeUrl("../../../assets/gold_ben.png");
 
 const podracers = [bt310Quadra, ordPedrovia, T9B_Wasp];
 const podracerLabels = ["BT310-Quadra", "Ord Pedrovia", "9T9-B Wasp"];
-const racers = [benQuadinaros, rattsTyerell, aldarBeedo, odyMandrell, teemtoPagalies, wanSandage, marsGuo, ebeeEndocott, dudBolt, mawhonic, gasgano, sebulba];
-const racerLabels = ["Ben Quadinaros", "Ratts Tyerell", "Aldar Beedo", "Ody Mandrell", "Teemto Pagalies", "Wan Sandage", "Mars Guo", "Ebe E. Endocott", "Dud Bolt", "Mawhonic", "Gasgano", "Sebulba"];
+const racers = [benQuadinaros, rattsTyerell, aldarBeedo, odyMandrell, teemtoPagalies, wanSandage, marsGuo, ebeeEndocott, dudBolt, mawhonic, gasgano, sebulba, goldBen];
+const racerLabels = ["Ben Quadinaros", "Ratts Tyerell", "Aldar Beedo", "Ody Mandrell", "Teemto Pagalies", "Wan Sandage", "Mars Guo", "Ebe E. Endocott", "Dud Bolt", "Mawhonic", "Gasgano", "Sebulba", "Gold Ben"];
 const activeImage = racerImage || podracerImage;
 const activeArray = racerImage ? racers : podracers;
 const activeLabels = racerImage ? racerLabels : podracerLabels;
