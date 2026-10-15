@@ -14,13 +14,14 @@ const normalizeUrl = (path) => new URL(path, window.location.href).href;
 
 // Podracer images
 const bt310Quadra = normalizeUrl("../../../assets/bt310_quadra.png");
+const ordPedrovia = normalizeUrl("../../../assets/ord_pedrovia.webp");
 
 // Racer images
 const benQuadinaros = normalizeUrl("../../../assets/ben.png");
 const rattsTyerell = normalizeUrl("../../../assets/rattstyerell.png");
 
-const podracers = [bt310Quadra];
-const podracerLabels = ["BT310-Quadra"];
+const podracers = [bt310Quadra, ordPedrovia];
+const podracerLabels = ["BT310-Quadra", "Ord Pedrovia"];
 const racers = [benQuadinaros, rattsTyerell];
 const racerLabels = ["Ben Quadinaros", "Ratts Tyerell"];
 
