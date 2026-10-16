@@ -39,3 +39,47 @@ h1 {
     max-width: 90vw;
     max-height: 90vh;
 }
+.obstacle {
+    position: fixed;
+    top: 70%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 18%;
+    height: 25%;
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    visibility: hidden;
+    pointer-events: none;
+}
+.obstacle.is-active {
+    visibility: visible;
+}
+.game-over {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgb(22 34 42 / 75%);
+    color: white;
+    text-align: center;
+}
+.game-over[hidden] {
+    display: none;
+}
+.game-over h1 {
+    color: white;
+}
+.game-over button {
+    padding: 0.8rem 1.2rem;
+    border: 0;
+    border-radius: 8px;
+    background-color: var(--blue);
+    color: var(--ink);
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+}

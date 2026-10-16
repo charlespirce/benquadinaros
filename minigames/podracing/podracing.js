@@ -6,6 +6,9 @@
  const racer = document.getElementById("ben");
  const racerShopButton = document.getElementById("racerShopButton");
  const podShopButton = document.getElementById("podShopButton");
+ const obstacle = document.getElementById("obstacle");
+ const gameOverScreen = document.getElementById("gameOver");
+ const restartButton = document.getElementById("restartButton");
 
  const equippedPodracer = localStorage.getItem("equippedPodracer");
  if (podracer && equippedPodracer) {
@@ -46,9 +49,16 @@ const pressedMovementKeys = new Set();
 let movementFrame = null;
 let lastMovementTime = 0;
 const movementSpeed = 1000;
+let raceFrame = null;
+let nextObstacleTime = 0;
+let obstacleExpiresAt = 0;
+let obstacleCollisionStartsAt = 0;
+let raceOver = false;
+const obstacleVisibleDuration = 1800;
+const obstacleCollisionDelay = 1000;
 
 function movePodracer(timestamp) {
-    if (!podracer || pressedMovementKeys.size === 0) {
+    if (!podracer || raceOver || pressedMovementKeys.size === 0) {
         movementFrame = null;
         lastMovementTime = 0;
         return;
@@ -74,9 +84,68 @@ function movePodracer(timestamp) {
     movementFrame = requestAnimationFrame(movePodracer);
 }
 
+function endRace() {
+    raceOver = true;
+    pressedMovementKeys.clear();
+    if (movementFrame !== null) {
+        cancelAnimationFrame(movementFrame);
+        movementFrame = null;
+    }
+    if (raceFrame !== null) {
+        cancelAnimationFrame(raceFrame);
+        raceFrame = null;
+    }
+    if (gameOverScreen) {
+        gameOverScreen.hidden = false;
+    }
+}
+
+function updateRace(timestamp) {
+    if (raceOver || !obstacle || !podracer) {
+        return;
+    }
+
+    if (!obstacle.classList.contains("is-active") && timestamp >= nextObstacleTime) {
+        obstacle.style.left = `${Math.random() * Math.max(0, window.innerWidth - obstacle.offsetWidth)}px`;
+        obstacle.classList.add("is-active");
+        obstacleExpiresAt = timestamp + obstacleVisibleDuration;
+        obstacleCollisionStartsAt = timestamp + obstacleCollisionDelay;
+    }
+
+    if (obstacle.classList.contains("is-active")) {
+        const obstacleBounds = obstacle.getBoundingClientRect();
+        const podBounds = podracer.getBoundingClientRect();
+        const collides = obstacleBounds.left < podBounds.right
+            && obstacleBounds.right > podBounds.left
+            && obstacleBounds.top < podBounds.bottom
+            && obstacleBounds.bottom > podBounds.top;
+
+        if (collides && timestamp >= obstacleCollisionStartsAt) {
+            endRace();
+            return;
+        }
+
+        if (timestamp >= obstacleExpiresAt) {
+            obstacle.classList.remove("is-active");
+            nextObstacleTime = timestamp + 700 + Math.random() * 800;
+        }
+    }
+
+    raceFrame = requestAnimationFrame(updateRace);
+}
+
+if (obstacle && podracer && window.location.pathname.endsWith("racing.html")) {
+    nextObstacleTime = performance.now() + 1000;
+    raceFrame = requestAnimationFrame(updateRace);
+}
+
+restartButton?.addEventListener("click", () => {
+    window.location.reload();
+});
+
 window.addEventListener('keydown', (event) => {
     const key = event.key.toLowerCase();
-    if (!podracer || !window.location.pathname.endsWith('racing.html') || !movementKeys.has(key)) {
+    if (!podracer || raceOver || !window.location.pathname.endsWith('racing.html') || !movementKeys.has(key)) {
         return;
     }
 
