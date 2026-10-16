@@ -83,7 +83,7 @@ function movePodracer(timestamp) {
             Math.min(window.innerWidth - halfWidth, currentCenter + direction * movementSpeed * elapsed)
         );
         podracer.style.left = `${nextCenter}px`;
-        racer.style.left = `${nextCenter - 84}px`;
+        racer.style.left = `${nextCenter}px`; //-84 was removed
     }
 
     movementFrame = requestAnimationFrame(movePodracer);
