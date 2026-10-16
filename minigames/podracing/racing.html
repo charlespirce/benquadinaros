@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="racing.css">
 </head>
 <body>
+    <div class="race-score" aria-live="polite">Score: <span id="raceScore">0</span></div>
     <div>
     <img class="pod" id = "pod" src="../../assets/bt310_quadra.png" alt="BT310 Quadra">
         <div><img class="ben" id = "ben" src="../../assets/ben.png" alt="Ben Quadinaros"></div>
@@ -16,7 +17,7 @@
     <section class="game-over" id="gameOver" role="alertdialog" aria-labelledby="gameOverTitle" hidden>
         <h1 id="gameOverTitle">Race Over</h1>
         <p>Your pod hit an obstacle.</p>
-        <button id="restartButton" type="button">Race Again</button>
+        <button id="restartButton" type="button">Back to Menu</button>
     </section>
 </body>
 <script src="podracing.js"></script>

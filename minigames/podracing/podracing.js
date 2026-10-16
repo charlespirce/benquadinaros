@@ -9,6 +9,11 @@
  const obstacle = document.getElementById("obstacle");
  const gameOverScreen = document.getElementById("gameOver");
  const restartButton = document.getElementById("restartButton");
+ const raceScoreDisplay = document.getElementById("raceScore");
+ let raceScore = 0;
+ const highScore = 0;
+ const score = 0;
+ const coins = 0;
 
  const equippedPodracer = localStorage.getItem("equippedPodracer");
  if (podracer && equippedPodracer) {
@@ -127,6 +132,10 @@ function updateRace(timestamp) {
 
         if (timestamp >= obstacleExpiresAt) {
             obstacle.classList.remove("is-active");
+            raceScore += 100;
+            if (raceScoreDisplay) {
+                raceScoreDisplay.textContent = String(raceScore);
+            }
             nextObstacleTime = timestamp + 700 + Math.random() * 800;
         }
     }
@@ -140,7 +149,7 @@ if (obstacle && podracer && window.location.pathname.endsWith("racing.html")) {
 }
 
 restartButton?.addEventListener("click", () => {
-    window.location.reload();
+    window.location.href = 'podracing_game.html';
 });
 
 window.addEventListener('keydown', (event) => {
