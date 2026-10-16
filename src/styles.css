@@ -237,6 +237,12 @@ body {
                                    instead of snapping instantly */
 }
 
+.wiki-button {
+    background-color: ButtonFace;
+    color: inherit;
+    text-decoration: none;
+}
+
 /* Added and removed by render() in Upgrade and SkinButton:
        this.element.classList.toggle("affordable", this.game.clicks >= this.cost);
    So the JS decides WHEN, and this rule decides WHAT IT LOOKS LIKE. */

@@ -58,10 +58,8 @@
          reads this file next. -->
     <aside class="shop-column">
 
-        <!-- The two shop sections. The <h2> headings are static text, so
-             they stay in the HTML; the buttons underneath are built by
-             main.js. Adding a new upgrade to an existing section needs no
-             change here - only adding a whole new SECTION would. -->
+        <!-- Section headings are static text, so they stay in the HTML;
+             most buttons underneath are built by main.js. -->
         <h2 class="shop-heading">Click Power</h2>
         <div id="click-shop-slot"></div>   <!-- CLICK_UPGRADES -->
 
@@ -72,6 +70,13 @@
         <div id="controls-slot"></div>     <!-- the reset button -->
         <h2 class="minigames-heading">Minigames</h2>
             <div id="minigames-slot"></div>    <!-- the minigame buttons -->
+        <h2 class="shop-heading">Wiki</h2>
+        <a class="shop-button affordable wiki-button"
+           href="https://github.com/charlespirce/benquadinaros/wiki"
+           target="_blank" rel="noopener noreferrer">
+            <img class="icon" src="assets/ben.png" alt="Wiki">
+            <span>Wiki</span>
+        </a>
     </aside>
 
 </div>
