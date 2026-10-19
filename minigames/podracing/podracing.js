@@ -24,6 +24,7 @@
  if (racer && equippedRacer) {
     racer.src = equippedRacer;
  }
+const pod_speed = 10;
 
  backButton?.addEventListener('click', () => {
         window.location.href = '../../index.html';
@@ -83,7 +84,9 @@ function movePodracer(timestamp) {
             Math.min(window.innerWidth - halfWidth, currentCenter + direction * movementSpeed * elapsed)
         );
         podracer.style.left = `${nextCenter}px`;
-        racer.style.left = `${nextCenter}px`; //-84 was removed
+        if (racer) {
+            racer.style.left = `${nextCenter}px`;
+        }
     }
 
     movementFrame = requestAnimationFrame(movePodracer);

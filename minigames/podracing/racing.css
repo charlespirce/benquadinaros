@@ -9,6 +9,7 @@ html, body {
     margin: 0;
     color: var(--ink);
     background: url("../../assets/tatooine_race.webp") center / cover no-repeat;
+    /*background: url("../../assets/grid.png") center / cover no-repeat;*/
     font-family: 'Space Grotesk', sans-serif;
 }
 
@@ -40,7 +41,7 @@ h1 {
     max-height: 90vh;
 }
 .obstacle {
-    position: fixed;
+    position: absolute;
     top: 70%;
     left: 0;
     transform: translateY(-50%);
