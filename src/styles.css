@@ -243,6 +243,36 @@ body {
     text-decoration: none;
 }
 
+.email-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding-bottom: 12px;
+    text-align: left;
+}
+
+.email-form input,
+.email-form button {
+    box-sizing: border-box;
+    min-height: 40px;
+    padding: 8px 10px;
+    font: inherit;
+}
+
+.email-form button {
+    cursor: pointer;
+}
+
+.email-form button:disabled {
+    cursor: wait;
+}
+
+#welcome-email-status {
+    min-height: 1.25em;
+    margin: 0;
+}
+
 /* Added and removed by render() in Upgrade and SkinButton:
        this.element.classList.toggle("affordable", this.game.clicks >= this.cost);
    So the JS decides WHEN, and this rule decides WHAT IT LOOKS LIKE. */

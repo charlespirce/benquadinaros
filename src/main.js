@@ -26,6 +26,9 @@
 // with a const name can still be changed. It is not "frozen".
 const ASSETS = "assets/";   // folder prefix, so paths are written once
 const MINI = "minigames/";  // folder prefix for minigames
+const EMAILJS_PUBLIC_KEY = "user_0g5k1Z7Q6r3J8x2z4y5zG";
+const EMAILJS_SERVICE_ID = "service_1";
+const EMAILJS_TEMPLATE_ID = "template_1";
 
 // An object literal: `{ key: value }`. This is JS's version of a dict.
 // Difference from Python: keys are written WITHOUT quotes, and you read
@@ -1121,3 +1124,41 @@ const game = new Game();   // create the game (loads the save, makes widgets)
 game.start();              // build the page and start the clock ticking
 
 new MusicPlayer(CONFIG.music);   // no name needed - it just listens and plays
+
+const welcomeEmailForm = document.querySelector("#welcome-email-form");
+const welcomeEmailStatus = document.querySelector("#welcome-email-status");
+
+welcomeEmailForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (EMAILJS_SERVICE_ID === "service_1" || EMAILJS_TEMPLATE_ID === "template_1") {
+        welcomeEmailStatus.textContent = "Email sending is not configured yet.";
+        return;
+    }
+
+    if (typeof emailjs === "undefined") {
+        welcomeEmailStatus.textContent = "Email service could not be loaded. Please try again later.";
+        return;
+    }
+
+    const submitButton = welcomeEmailForm.querySelector("button[type='submit']");
+    submitButton.disabled = true;
+    welcomeEmailStatus.textContent = "Sending...";
+
+    try {
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+            to_email: welcomeEmailForm.elements.email.value,
+            to_name: "Ben Quadinaros Clicker player",
+            from_name: "Ben Quadinaros Clicker",
+            message: "Welcome to Ben Quadinaros Clicker. Thanks for playing!",
+        });
+        welcomeEmailStatus.textContent = "Welcome email sent. Check your inbox.";
+        welcomeEmailForm.reset();
+    } catch (error) {
+        console.error("Failed to send welcome email:", error);
+        welcomeEmailStatus.textContent = "Could not send the email. Please try again later.";
+    } finally {
+        submitButton.disabled = false;
+    }
+});
