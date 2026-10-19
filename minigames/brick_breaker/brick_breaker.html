@@ -7,8 +7,33 @@
     <link rel="stylesheet" href="brick_breaker.css">
 </head>
 <body>
-    <h1>Ben Brick Breaker (COMING SOON) alay nyee wanga</h1>
-    <button id = "backButton">Back to Clicker</button>
+    <main class="game-shell">
+        <header class="game-header">
+            <a class="back-button" href="../../index.html">&larr; Clicker</a>
+            <div class="title-block">
+                <p class="eyebrow">BEN QUADINAROS</p>
+                <h1>Brick Breaker</h1>
+            </div>
+            <div class="scoreboard" aria-live="polite">
+                <div><span>Score</span><strong id="score">0</strong></div>
+                <div><span>Lives</span><strong id="lives">3</strong></div>
+            </div>
+        </header>
+
+        <section class="game-panel" aria-label="Brick breaker game">
+            <canvas id="gameCanvas" width="960" height="640" aria-label="Ben Brick Breaker playfield">
+                Your browser does not support canvas.
+            </canvas>
+            <div class="game-actions">
+                <button id="startButton" type="button">Start game</button>
+                <p id="gameMessage" role="status">Break every Ben to win.</p>
+            </div>
+        </section>
+
+        <footer class="game-footer">
+            <span>Move: mouse, touch, A / D, or arrow keys</span>
+        </footer>
+    </main>
 </body>
-<script src="brick_breaker.js"></script>
+<script src="brick_breaker.js" defer></script>
 </html>
