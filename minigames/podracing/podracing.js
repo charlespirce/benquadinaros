@@ -54,7 +54,7 @@ const movementKeys = new Set(['arrowleft', 'a', 'arrowright', 'd']);
 const pressedMovementKeys = new Set();
 let movementFrame = null;
 let lastMovementTime = 0;
-const movementSpeed = 1000;
+const movementSpeed = 50;
 let raceFrame = null;
 let nextObstacleTime = 0;
 let obstacleExpiresAt = 0;
@@ -62,6 +62,36 @@ let obstacleCollisionStartsAt = 0;
 let raceOver = false;
 const obstacleVisibleDuration = 1800;
 const obstacleCollisionDelay = 1000;
+const raceBackground = new Image();
+raceBackground.src = "../../assets/grid.png";
+let obstacleBackgroundPoint = null;
+
+function getRaceBackgroundLayout() {
+    const scale = Math.max(
+        window.innerWidth / raceBackground.naturalWidth,
+        window.innerHeight / raceBackground.naturalHeight
+    );
+    const width = raceBackground.naturalWidth * scale;
+    const height = raceBackground.naturalHeight * scale;
+
+    return {
+        scale,
+        left: (window.innerWidth - width) / 2,
+        top: (window.innerHeight - height) / 2
+    };
+}
+
+function positionObstacleOnBackground() {
+    if (!obstacle || !obstacleBackgroundPoint || !raceBackground.naturalWidth) {
+        return;
+    }
+
+    const background = getRaceBackgroundLayout();
+    const centerX = background.left + obstacleBackgroundPoint.x * background.scale;
+    const centerY = background.top + obstacleBackgroundPoint.y * background.scale;
+    obstacle.style.left = `${centerX - obstacle.offsetWidth / 2}px`;
+    obstacle.style.top = `${centerY}px`;
+}
 
 function movePodracer(timestamp) {
     if (!podracer || raceOver || pressedMovementKeys.size === 0) {
@@ -76,17 +106,21 @@ function movePodracer(timestamp) {
     const direction = Number(pressedMovementKeys.has('arrowright') || pressedMovementKeys.has('d'))
         - Number(pressedMovementKeys.has('arrowleft') || pressedMovementKeys.has('a'));
     if (direction !== 0) {
-        const bounds = podracer.getBoundingClientRect();
-        const halfWidth = bounds.width / 2;
-        const currentCenter = bounds.left + halfWidth;
-        const nextCenter = Math.max(
-            halfWidth,
-            Math.min(window.innerWidth - halfWidth, currentCenter + direction * movementSpeed * elapsed)
+        const sprites = [podracer, racer].filter(Boolean);
+        const bounds = sprites.map((sprite) => sprite.getBoundingClientRect());
+        const leftEdge = Math.min(...bounds.map((spriteBounds) => spriteBounds.left));
+        const rightEdge = Math.max(...bounds.map((spriteBounds) => spriteBounds.right));
+        const requestedPercent = direction * movementSpeed * elapsed;
+        const requestedPixels = requestedPercent / 100 * window.innerWidth;
+        const movementPixels = Math.max(
+            -leftEdge,
+            Math.min(window.innerWidth - rightEdge, requestedPixels)
         );
-        podracer.style.left = `${nextCenter}px`;
-        if (racer) {
-            racer.style.left = `${nextCenter}px`;
-        }
+
+        sprites.forEach((sprite, index) => {
+            const center = bounds[index].left + bounds[index].width / 2 + movementPixels;
+            sprite.style.left = `${center / window.innerWidth * 100}%`;
+        });
     }
 
     movementFrame = requestAnimationFrame(movePodracer);
@@ -114,7 +148,20 @@ function updateRace(timestamp) {
     }
 
     if (!obstacle.classList.contains("is-active") && timestamp >= nextObstacleTime) {
-        obstacle.style.left = `${Math.random() * Math.max(0, window.innerWidth - obstacle.offsetWidth)}px`;
+        if (!raceBackground.naturalWidth) {
+            raceFrame = requestAnimationFrame(updateRace);
+            return;
+        }
+
+        const background = getRaceBackgroundLayout();
+        const centerX = obstacle.offsetWidth / 2
+            + Math.random() * Math.max(0, window.innerWidth - obstacle.offsetWidth);
+        const centerY = window.innerHeight * 0.7;
+        obstacleBackgroundPoint = {
+            x: (centerX - background.left) / background.scale,
+            y: (centerY - background.top) / background.scale
+        };
+        positionObstacleOnBackground();
         obstacle.classList.add("is-active");
         obstacleExpiresAt = timestamp + obstacleVisibleDuration;
         obstacleCollisionStartsAt = timestamp + obstacleCollisionDelay;
@@ -145,6 +192,8 @@ function updateRace(timestamp) {
 
     raceFrame = requestAnimationFrame(updateRace);
 }
+
+window.addEventListener("resize", positionObstacleOnBackground);
 
 if (obstacle && podracer && window.location.pathname.endsWith("racing.html")) {
     nextObstacleTime = performance.now() + 1000;
