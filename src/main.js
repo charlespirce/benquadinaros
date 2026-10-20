@@ -26,9 +26,9 @@
 // with a const name can still be changed. It is not "frozen".
 const ASSETS = "assets/";   // folder prefix, so paths are written once
 const MINI = "minigames/";  // folder prefix for minigames
-const EMAILJS_PUBLIC_KEY = "_SJqtZEoptX-1mUrQKWgw";
-const EMAILJS_SERVICE_ID = "service_xlyqq0i";
-const EMAILJS_TEMPLATE_ID = "template_1";
+const EMAILJS_PUBLIC_KEY = "4OLmBdKKJGRXyNPo3"; //my (cp's) public key 
+const EMAILJS_SERVICE_ID = "service_xlyqq0i"; //gmail service
+const EMAILJS_TEMPLATE_ID = "template_oe7pmxb"; //welcome template
 
 // An object literal: `{ key: value }`. This is JS's version of a dict.
 // Difference from Python: keys are written WITHOUT quotes, and you read
@@ -1131,10 +1131,10 @@ const welcomeEmailStatus = document.querySelector("#welcome-email-status");
 welcomeEmailForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    /*if (EMAILJS_SERVICE_ID === "service_xlyqq0i" || EMAILJS_TEMPLATE_ID === "template_1") {
+    if (EMAILJS_SERVICE_ID === "service_1" || EMAILJS_TEMPLATE_ID === "template_1") { //checks if you are a dumbass and don't put a real ID
         welcomeEmailStatus.textContent = "Email sending is not configured yet.";
         return;
-    }*/
+    }
     
     if (typeof emailjs === "undefined") {
         welcomeEmailStatus.textContent = "Email service could not be loaded. Please try again later.";
@@ -1148,10 +1148,10 @@ welcomeEmailForm.addEventListener("submit", async (event) => {
     try {
         emailjs.init(EMAILJS_PUBLIC_KEY);
         await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-            to_email: "charles.price1@wa-students.org", //welcomeEmailForm.elements.email.value
-            to_name: "Ben Quadinaros Clicker player",
-            from_name: "Ben Quadinaros Clicker",
-            message: "Welcome to Ben Quadinaros Clicker. Thanks for playing!",
+            email: welcomeEmailForm.elements.email.value,
+            name: "Beloved Player",
+            //from_name: "Ben Quadinaros Clicker", //not un template params I think
+            //message: "Welcome to Ben Quadinaros Clicker.", //not un template params I think
         });
         welcomeEmailStatus.textContent = "Welcome email sent. Check your inbox.";
         welcomeEmailForm.reset();
