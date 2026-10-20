@@ -26,7 +26,7 @@
 // with a const name can still be changed. It is not "frozen".
 const ASSETS = "assets/";   // folder prefix, so paths are written once
 const MINI = "minigames/";  // folder prefix for minigames
-const EMAILJS_PUBLIC_KEY = "-uy0_iWK9oPTE_6pT";
+const EMAILJS_PUBLIC_KEY = "_SJqtZEoptX-1mUrQKWgw";
 const EMAILJS_SERVICE_ID = "service_xlyqq0i";
 const EMAILJS_TEMPLATE_ID = "template_1";
 
@@ -1148,7 +1148,7 @@ welcomeEmailForm.addEventListener("submit", async (event) => {
     try {
         emailjs.init(EMAILJS_PUBLIC_KEY);
         await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-            to_email: welcomeEmailForm.elements.email.value,
+            to_email: "charles.price1@wa-students.org", //welcomeEmailForm.elements.email.value
             to_name: "Ben Quadinaros Clicker player",
             from_name: "Ben Quadinaros Clicker",
             message: "Welcome to Ben Quadinaros Clicker. Thanks for playing!",
