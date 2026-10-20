@@ -27,7 +27,7 @@
 const ASSETS = "assets/";   // folder prefix, so paths are written once
 const MINI = "minigames/";  // folder prefix for minigames
 const EMAILJS_PUBLIC_KEY = "user_0g5k1Z7Q6r3J8x2z4y5zG";
-const EMAILJS_SERVICE_ID = "service_1";
+const EMAILJS_SERVICE_ID = "service_xlyqq0i";
 const EMAILJS_TEMPLATE_ID = "template_1";
 
 // An object literal: `{ key: value }`. This is JS's version of a dict.
@@ -1131,7 +1131,7 @@ const welcomeEmailStatus = document.querySelector("#welcome-email-status");
 welcomeEmailForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    if (EMAILJS_SERVICE_ID === "service_1" || EMAILJS_TEMPLATE_ID === "template_1") {
+    if (EMAILJS_SERVICE_ID === "service_xlyqq0i" || EMAILJS_TEMPLATE_ID === "template_1") {
         welcomeEmailStatus.textContent = "Email sending is not configured yet.";
         return;
     }
