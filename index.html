@@ -80,15 +80,26 @@
             <span>Wiki</span>
         </a>
           <h2 class="shop-heading">Welcome Email</h2>
-          <form id="welcome-email-form" class="email-form">
-               <label for="welcome-email">Email address</label>
-               <input id="welcome-email" name="email" type="email" autocomplete="email" required>
-               <button type="submit">Send welcome email</button>
-               <p id="welcome-email-status" role="status" aria-live="polite"></p>
-          </form>
+          <div class="email-form">
+               <p id="email-summary"></p>
+               <button id="email-change" type="button">Change email</button>
+          </div>
     </aside>
 
 </div>
+
+<!-- The email pop-up. <dialog> is hidden until main.js calls showModal().
+     It asks once on first visit; "Change email" above reopens it. -->
+<dialog id="email-dialog" class="email-dialog">
+    <form id="welcome-email-form" class="email-form">
+        <h2 class="shop-heading">Get a welcome email?</h2>
+        <label for="welcome-email">Email address</label>
+        <input id="welcome-email" name="email" type="email" autocomplete="email" required>
+        <button type="submit">Save</button>
+        <button id="email-dismiss" type="button">Not now</button>
+        <p id="welcome-email-status" role="status" aria-live="polite"></p>
+    </form>
+</dialog>
 
 <img id="test-img" src="assets/gold_ben.png">
 

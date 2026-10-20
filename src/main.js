@@ -1125,40 +1125,106 @@ game.start();              // build the page and start the clock ticking
 
 new MusicPlayer(CONFIG.music);   // no name needed - it just listens and plays
 
+/* ---- Welcome email pop-up ----
+   Asks for an email ONCE (first visit), remembers the answer, and sends
+   at most ONE email per month per browser. Saving an address within a
+   month of the last email just updates the address - nothing is sent.
+   These keys are not touched by the Reset button, so resetting the game
+   cannot be used to send more emails. */
+const EMAIL_KEYS = {
+    address: "player-email",              // the saved address
+    sentAt: "welcome-email-sent-at",      // when the last email went out (ms since 1970)
+    dismissed: "email-prompt-dismissed",  // true if they clicked "Not now"
+};
+
+const EMAIL_COOLDOWN_MS = 30 * 24 * 60 * 60 * 1000;   // 30 days, in milliseconds
+
+const emailDialog = document.querySelector("#email-dialog");
 const welcomeEmailForm = document.querySelector("#welcome-email-form");
 const welcomeEmailStatus = document.querySelector("#welcome-email-status");
+const emailSummary = document.querySelector("#email-summary");
 
-welcomeEmailForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
+// Updates the little "Email: ..." line in the sidebar.
+function renderEmailSummary() {
+    const address = Save.text(EMAIL_KEYS.address, "");
+    emailSummary.textContent = address ? "Email: " + address : "No email saved.";
+}
 
+function openEmailDialog() {
+    welcomeEmailForm.elements.email.value = Save.text(EMAIL_KEYS.address, "");
+    welcomeEmailStatus.textContent = "";
+    emailDialog.showModal();
+}
+
+// True if a month has passed since the last email (or none was ever sent).
+function canSendEmail() {
+    return Date.now() - Save.number(EMAIL_KEYS.sentAt, 0) >= EMAIL_COOLDOWN_MS;
+}
+
+// Sends the welcome email. Returns true if it went out.
+async function sendWelcomeEmail(address) {
     if (EMAILJS_SERVICE_ID === "service_1" || EMAILJS_TEMPLATE_ID === "template_1") { //checks if you are a dumbass and don't put a real ID
         welcomeEmailStatus.textContent = "Email sending is not configured yet.";
-        return;
-    }
-    
-    if (typeof emailjs === "undefined") {
-        welcomeEmailStatus.textContent = "Email service could not be loaded. Please try again later.";
-        return;
+        return false;
     }
 
-    const submitButton = welcomeEmailForm.querySelector("button[type='submit']");
-    submitButton.disabled = true;
-    welcomeEmailStatus.textContent = "Sending...";
+    if (typeof emailjs === "undefined") {
+        welcomeEmailStatus.textContent = "Email service could not be loaded. Please try again later.";
+        return false;
+    }
 
     try {
         emailjs.init(EMAILJS_PUBLIC_KEY);
         await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-            email: welcomeEmailForm.elements.email.value,
+            email: address,
             name: "Beloved Player",
-            //from_name: "Ben Quadinaros Clicker", //not un template params I think
-            //message: "Welcome to Ben Quadinaros Clicker.", //not un template params I think
         });
-        welcomeEmailStatus.textContent = "Welcome email sent. Check your inbox.";
-        welcomeEmailForm.reset();
+        return true;
     } catch (error) {
         console.error("Failed to send welcome email:", error);
         welcomeEmailStatus.textContent = "Could not send the email. Please try again later.";
-    } finally {
-        submitButton.disabled = false;
+        return false;
     }
+}
+
+welcomeEmailForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const address = welcomeEmailForm.elements.email.value.trim();
+    Save.set(EMAIL_KEYS.address, address);
+    renderEmailSummary();
+
+    // Already emailed this month - just save the new address.
+    if (!canSendEmail()) {
+        emailDialog.close();
+        return;
+    }
+
+    // Disabled while sending so double-clicking cannot send two.
+    const submitButton = welcomeEmailForm.querySelector("button[type='submit']");
+    submitButton.disabled = true;
+    welcomeEmailStatus.textContent = "Sending...";
+
+    if (await sendWelcomeEmail(address)) {
+        Save.set(EMAIL_KEYS.sentAt, Date.now());
+        welcomeEmailStatus.textContent = "Welcome email sent. Check your inbox.";
+        setTimeout(() => emailDialog.close(), 1500);
+    }
+    submitButton.disabled = false;
 });
+
+document.querySelector("#email-dismiss").addEventListener("click", () => {
+    Save.set(EMAIL_KEYS.dismissed, true);
+    emailDialog.close();
+});
+
+// Pressing Escape closes a <dialog> too - treat that as "Not now".
+emailDialog.addEventListener("cancel", () => Save.set(EMAIL_KEYS.dismissed, true));
+
+document.querySelector("#email-change").addEventListener("click", openEmailDialog);
+
+renderEmailSummary();
+
+// Only pop up on its own if they have never answered or dismissed it.
+if (!Save.text(EMAIL_KEYS.address, "") && !Save.bool(EMAIL_KEYS.dismissed)) {
+    openEmailDialog();
+}
