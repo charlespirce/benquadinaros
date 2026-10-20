@@ -23,7 +23,9 @@
          page has been read". That guarantees the empty <div>s below
          already exist by the time main.js goes looking for them, which is
          why the code can run at the top level without any setup wrapper. -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="src/main.js" defer></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/dvd-ben@1.0.0/dist/dvd_ben.min.js"></script>
 </head>
 
 <!-- <body> holds everything the user can actually see. -->
@@ -77,11 +79,29 @@
             <img class="icon" src="assets/ben.png" alt="Wiki">
             <span>Wiki</span>
         </a>
+          <h2 class="shop-heading">Welcome Email</h2>
+          <div class="email-form">
+               <p id="email-summary"></p>
+               <button id="email-change" type="button">Change email</button>
+          </div>
     </aside>
 
 </div>
 
-<img id="test-img" src="assets/gold_ben.png">
+<!-- The email pop-up. <dialog> is hidden until main.js calls showModal().
+     It asks once on first visit; "Change email" above reopens it. -->
+<dialog id="email-dialog" class="email-dialog">
+    <form id="welcome-email-form" class="email-form">
+        <h2 class="shop-heading">Get a welcome email?</h2>
+        <label for="welcome-email">Email address</label>
+        <input id="welcome-email" name="email" type="email" autocomplete="email" required>
+        <button type="submit">Save</button>
+        <button id="email-dismiss" type="button">Not now</button>
+        <p id="welcome-email-status" role="status" aria-live="polite"></p>
+    </form>
+</dialog>
+
+<img id="dvd-ben" src="assets/gold_ben.png">
 
 <script src="src/dvd_ben.js" ></script>
 
