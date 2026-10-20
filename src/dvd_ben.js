@@ -1,5 +1,5 @@
 //game test thing, make dvd type image bounce around
-const logo = document.getElementById("test-img");
+const logo = document.getElementById("dvd-ben");
 let clicks = Number(localStorage.getItem("totalClicks")) || 0;
 let clickPower = Number(localStorage.getItem("clickPower")) || 1;
 
