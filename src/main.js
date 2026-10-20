@@ -26,7 +26,7 @@
 // with a const name can still be changed. It is not "frozen".
 const ASSETS = "assets/";   // folder prefix, so paths are written once
 const MINI = "minigames/";  // folder prefix for minigames
-const EMAILJS_PUBLIC_KEY = "user_0g5k1Z7Q6r3J8x2z4y5zG";
+const EMAILJS_PUBLIC_KEY = "-uy0_iWK9oPTE_6pT";
 const EMAILJS_SERVICE_ID = "service_xlyqq0i";
 const EMAILJS_TEMPLATE_ID = "template_1";
 
