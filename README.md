@@ -1,3 +1,3 @@
 # 
 https://charlespirce.github.io/benquadinaros/
-the website is running from main branch
+(this is email-slop branch) the website is running from email-slop branch
