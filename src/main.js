@@ -1131,11 +1131,11 @@ const welcomeEmailStatus = document.querySelector("#welcome-email-status");
 welcomeEmailForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    if (EMAILJS_SERVICE_ID === "service_xlyqq0i" || EMAILJS_TEMPLATE_ID === "template_1") {
+    /*if (EMAILJS_SERVICE_ID === "service_xlyqq0i" || EMAILJS_TEMPLATE_ID === "template_1") {
         welcomeEmailStatus.textContent = "Email sending is not configured yet.";
         return;
-    }
-
+    }*/
+    
     if (typeof emailjs === "undefined") {
         welcomeEmailStatus.textContent = "Email service could not be loaded. Please try again later.";
         return;
