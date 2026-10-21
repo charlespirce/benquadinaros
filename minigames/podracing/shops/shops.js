@@ -13,6 +13,32 @@ const podracerLabel = document.querySelector(".podracer-label");
 
 const normalizeUrl = (path) => new URL(path, window.location.href).href;
 
+const shopSound = new Audio(normalizeUrl("../../../assets/podracer_shop.wav"));
+
+function playShopSound() {
+    const playback = shopSound.play();
+
+    playback.catch(error => {
+        if (error.name !== "NotAllowedError") {
+            console.error("Unable to play shop audio:", error);
+            return;
+        }
+
+        const playAfterInteraction = () => {
+            document.removeEventListener("pointerdown", playAfterInteraction);
+            document.removeEventListener("keydown", playAfterInteraction);
+            shopSound.play().catch(playError => {
+                console.error("Unable to play shop audio:", playError);
+            });
+        };
+
+        document.addEventListener("pointerdown", playAfterInteraction, { once: true });
+        document.addEventListener("keydown", playAfterInteraction, { once: true });
+    });
+}
+
+playShopSound();
+
 // Podracer images
 const bt310Quadra = normalizeUrl("../../../assets/bt310_quadra.png");
 const ordPedrovia = normalizeUrl("../../../assets/ord_pedrovia.webp");
