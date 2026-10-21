@@ -1207,7 +1207,10 @@ welcomeEmailForm.addEventListener("submit", async (event) => {
     if (await sendWelcomeEmail(address)) {
         Save.set(EMAIL_KEYS.sentAt, Date.now());
         welcomeEmailStatus.textContent = "Welcome email sent. Check your inbox.";
-        setTimeout(() => emailDialog.close(), 1500);
+        setTimeout(() => {
+            emailDialog.close();
+            new Sound(ASSETS + "emailed.wav").play();
+        }, 1500);
     }
     submitButton.disabled = false;
 });
