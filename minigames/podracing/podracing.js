@@ -24,9 +24,8 @@
     : null;
  const raceScoreDisplay = document.getElementById("raceScore");
  let raceScore = 0;
- const highScore = 0;
- const score = 0;
- const coins = 0;
+ const highScore = parseInt(localStorage.getItem("highScore")) || 0;
+ const coins = parseInt(localStorage.getItem("coins")) || 0;
 
  const equippedPodracer = localStorage.getItem("equippedPodracer");
  if (podracer && equippedPodracer) {
@@ -180,6 +179,11 @@ function movePodracer(timestamp) {
 
 function endRace() {
     raceOver = true;
+    if (raceScore > highScore) {
+        localStorage.setItem("highScore", String(raceScore));
+    }
+    coins += Math.floor(raceScore / 500);
+    localStorage.setItem("coins", String(coins));
     raceAudio?.pause();
     raceAudioSource?.stop();
     raceAudioSource?.disconnect();
