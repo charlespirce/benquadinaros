@@ -43,6 +43,7 @@ playShopSound();
 const bt310Quadra = normalizeUrl("../../../assets/bt310_quadra.png");
 const ordPedrovia = normalizeUrl("../../../assets/ord_pedrovia.webp");
 const T9B_Wasp = normalizeUrl("../../../assets/9T9-B_wasp.png");
+const vulptereen327 = normalizeUrl("../../../assets/vulptereen327.webp");
 
 // Racer images
 const benQuadinaros = normalizeUrl("../../../assets/ben.png");
@@ -59,8 +60,8 @@ const gasgano = normalizeUrl("../../../assets/gasgano.png");
 const sebulba = normalizeUrl("../../../assets/sebulba.png");
 const goldBen = normalizeUrl("../../../assets/gold_ben.png");
 
-const podracers = [bt310Quadra, ordPedrovia, T9B_Wasp];
-const podracerLabels = ["BT310-Quadra", "Ord Pedrovia", "9T9-B Wasp"];
+const podracers = [bt310Quadra, ordPedrovia, T9B_Wasp, vulptereen327];
+const podracerLabels = ["BT310-Quadra", "Ord Pedrovia", "9T9-B Wasp", "Vulptereen 327"];
 const racers = [benQuadinaros, rattsTyerell, aldarBeedo, odyMandrell, teemtoPagalies, wanSandage, marsGuo, ebeeEndocott, dudBolt, mawhonic, gasgano, sebulba, goldBen];
 const racerLabels = ["Ben Quadinaros", "Ratts Tyerell", "Aldar Beedo", "Ody Mandrell", "Teemto Pagalies", "Wan Sandage", "Mars Guo", "Ebe E. Endocott", "Dud Bolt", "Mawhonic", "Gasgano", "Sebulba", "Gold Ben"];
 const activeImage = racerImage || podracerImage;

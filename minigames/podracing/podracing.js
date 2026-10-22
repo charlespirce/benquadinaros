@@ -9,11 +9,23 @@
  const obstacle = document.getElementById("obstacle");
  const gameOverScreen = document.getElementById("gameOver");
  const restartButton = document.getElementById("restartButton");
+ const raceAudio = document.getElementById("raceAudio");
+ const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+ const raceAudioContext = raceAudio && AudioContextClass ? new AudioContextClass() : null;
+ const raceAudioBuffer = raceAudioContext
+    ? fetch("../../assets/racing.wav")
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`Could not load racing music: ${response.status}`);
+            }
+            return response.arrayBuffer();
+        })
+        .then((audioData) => raceAudioContext.decodeAudioData(audioData))
+    : null;
  const raceScoreDisplay = document.getElementById("raceScore");
  let raceScore = 0;
- const highScore = 0;
- const score = 0;
- const coins = 0;
+ const highScore = parseInt(localStorage.getItem("highScore")) || 0;
+ const coins = parseInt(localStorage.getItem("coins")) || 0;
 
  const equippedPodracer = localStorage.getItem("equippedPodracer");
  if (podracer && equippedPodracer) {
@@ -65,6 +77,45 @@ const obstacleCollisionDelay = 1000;
 const raceBackground = new Image();
 raceBackground.src = "../../assets/grid.png";
 let obstacleBackgroundPoint = null;
+let raceAudioSource = null;
+let raceAudioStartPromise = null;
+
+function playRaceAudio() {
+    if (raceOver || raceAudioSource || raceAudioStartPromise) {
+        return;
+    }
+
+    if (!raceAudioContext) {
+        raceAudio?.play().catch((error) => {
+            if (error.name !== "NotAllowedError") {
+                console.error("Failed to play racing music:", error);
+            }
+        });
+        return;
+    }
+
+    const resumePromise = raceAudioContext.resume();
+    raceAudioStartPromise = Promise.all([raceAudioBuffer, resumePromise])
+        .then(([audioBuffer]) => {
+            if (raceOver || raceAudioSource || raceAudioContext.state !== "running") {
+                return;
+            }
+
+            raceAudioSource = raceAudioContext.createBufferSource();
+            raceAudioSource.buffer = audioBuffer;
+            raceAudioSource.loop = true;
+            raceAudioSource.connect(raceAudioContext.destination);
+            raceAudioSource.start();
+        })
+        .catch((error) => {
+            if (error.name !== "NotAllowedError") {
+                console.error("Failed to play racing music:", error);
+            }
+        })
+        .finally(() => {
+            raceAudioStartPromise = null;
+        });
+}
 
 function getRaceBackgroundLayout() {
     const scale = Math.max(
@@ -128,6 +179,15 @@ function movePodracer(timestamp) {
 
 function endRace() {
     raceOver = true;
+    if (raceScore > highScore) {
+        localStorage.setItem("highScore", String(raceScore));
+    }
+    coins += Math.floor(raceScore / 500);
+    localStorage.setItem("coins", String(coins));
+    raceAudio?.pause();
+    raceAudioSource?.stop();
+    raceAudioSource?.disconnect();
+    raceAudioSource = null;
     pressedMovementKeys.clear();
     if (movementFrame !== null) {
         cancelAnimationFrame(movementFrame);
@@ -196,6 +256,7 @@ function updateRace(timestamp) {
 window.addEventListener("resize", positionObstacleOnBackground);
 
 if (obstacle && podracer && window.location.pathname.endsWith("racing.html")) {
+    playRaceAudio();
     nextObstacleTime = performance.now() + 1000;
     raceFrame = requestAnimationFrame(updateRace);
 }
@@ -212,6 +273,7 @@ window.addEventListener('keydown', (event) => {
 
     event.preventDefault();
     pressedMovementKeys.add(key);
+    playRaceAudio();
     if (movementFrame === null) {
         movementFrame = requestAnimationFrame(movePodracer);
     }
