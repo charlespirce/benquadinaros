@@ -1,0 +1,8 @@
+# System files 
+.DS_Store
+.DS_Store?
+Thumbs.db
+
+# Code editor and AI project files
+.vscode/
+.claude/
