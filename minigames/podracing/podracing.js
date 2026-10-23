@@ -24,8 +24,8 @@
     : null;
  const raceScoreDisplay = document.getElementById("raceScore");
  let raceScore = 0;
- const highScore = parseInt(localStorage.getItem("highScore")) || 0;
- const coins = parseInt(localStorage.getItem("coins")) || 0;
+ let highScore = parseInt(localStorage.getItem("highScore")) || 0;
+ let coins = parseInt(localStorage.getItem("coins")) || 0;
 
  const equippedPodracer = localStorage.getItem("equippedPodracer");
  if (podracer && equippedPodracer) {
