@@ -25,6 +25,7 @@
          why the code can run at the top level without any setup wrapper. -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="src/main.js" defer></script>
+    <script src="src/first_visit_captcha.js" defer></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/dvd-ben@1.0.0/dist/dvd_ben.min.js"></script>
 </head>
 
@@ -87,6 +88,17 @@
     </aside>
 
 </div>
+
+<dialog id="first-visit-captcha" class="captcha-dialog" aria-labelledby="captcha-title">
+    <form id="captcha-form">
+        <h2 id="captcha-title">Quick verification</h2>
+        <p>Solve this question to continue:</p>
+        <label for="captcha-answer" id="captcha-question"></label>
+        <input id="captcha-answer" name="answer" type="number" inputmode="numeric" required autocomplete="off">
+        <button type="submit">Continue</button>
+        <p id="captcha-status" role="status" aria-live="polite"></p>
+    </form>
+</dialog>
 
 <!-- The email pop-up. <dialog> is hidden until main.js calls showModal().
      It asks once on first visit; "Change email" above reopens it. -->

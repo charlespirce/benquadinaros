@@ -286,6 +286,43 @@ body {
     background: rgba(0, 0, 0, 0.5);
 }
 
+.captcha-dialog {
+    width: min(360px, calc(100vw - 32px));
+    padding: 16px;
+    border: 2px solid #1b6b2f;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.captcha-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.65);
+}
+
+#captcha-form {
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+}
+
+#captcha-form h2,
+#captcha-form p {
+    margin: 0;
+}
+
+#captcha-answer {
+    width: 100px;
+    font: inherit;
+}
+
+#captcha-form button {
+    cursor: pointer;
+    font: inherit;
+}
+
+#captcha-status {
+    min-height: 1.25em;
+}
+
 /* Added and removed by render() in Upgrade and SkinButton:
        this.element.classList.toggle("affordable", this.game.clicks >= this.cost);
    So the JS decides WHEN, and this rule decides WHAT IT LOOKS LIKE. */

@@ -1229,5 +1229,9 @@ renderEmailSummary();
 
 // Only pop up on its own if they have never answered or dismissed it.
 if (!Save.text(EMAIL_KEYS.address, "") && !Save.bool(EMAIL_KEYS.dismissed)) {
-    openEmailDialog();
+    if (localStorage.getItem("first-visit-captcha-completed") === "true") {
+        openEmailDialog();
+    } else {
+        window.addEventListener("first-visit-captcha-completed", openEmailDialog, { once: true });
+    }
 }
